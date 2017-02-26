@@ -1,0 +1,250 @@
+global RUNNING_MODE METHOD INCIDENT_START
+
+SYS_FREQ=60;
+DEBUG = false;
+
+dfile = 'datane_glb.m';% New England
+% dfile= 'data16m_glb.m'; % larger power network
+
+lfile =length(dfile);
+dfile = lower(dfile(1:lfile-2));
+eval(dfile);
+
+BASE_POWER = 100; % 100 MVA
+% DC_CAPACITY = 50/BASE_POWER; % 50 MW % data16m_glb
+DC_CAPACITY = 50/BASE_POWER; % 50 MW % datane_glb
+DC_DEMAND = 0.8*DC_CAPACITY;
+DC_flex = 0.25;
+DC_num = 6;
+
+disturbance_size = [1, 1 , 1];         % in pu
+% disturbance_bus = [ 1, 21, 33];     % buses for data16m_glb
+disturbance_bus = [ 4, 8, 20];     % buses % for datane_glb
+
+%% 
+
+% ibus_con = zeros(length(mac_con(:,1)),1);
+%ibus_con(10) = 1;
+
+generator_capacity_factor = 0.1;    % ratio with setppoint load
+
+%generator_bus = bus(abs(bus(:,4))>0.0001,1); 
+generator_bus = mac_con(:,2);
+generator_setpoint = bus(generator_bus, 4);
+generator_base = mac_con(:,3); 
+generator_setpoint_macpu = BASE_POWER*generator_setpoint./generator_base;
+
+governor_gain = 50*generator_setpoint_macpu;
+generator_capacity = [-generator_setpoint_macpu*generator_capacity_factor, generator_capacity_factor*generator_setpoint_macpu];
+
+ remove_governor = [2;4;6;8;10];
+% remaining_governor = [1; 3; 5; 7;];
+% remove_governor = [];
+%remaining_governor = transpose(1:1:10);
+
+governor_gain(remove_governor)=0;
+
+
+% if (~isempty(remove_governor))
+%    remove_ratio = sum(generator_setpoint(remove_governor))/sum(bus(generator_bus,4));   % with respect to loads
+%    OLC_capacity_factor = remove_ratio*generator_capacity_factor;
+% else
+%    OLC_capacity_factor = 0;
+% end;
+
+OLC_capacity_factor = 0.5;
+
+
+if METHOD == Method.proposed
+   OLC_bus = bus(abs(bus(:,6))>0,1);    
+elseif METHOD == Method.OLC
+   OLC_bus = bus(abs(bus(:,6))>0 ,1);
+else
+   error(['Running ' METHOD]);
+end
+
+number_load_bus = length(load_bus_index);
+
+
+disturbance_mod = zeros(size(disturbance_bus));
+
+
+load_con = zeros(number_load_bus,5);
+load_con(:,1) = load_bus_index;
+load_con(:,2:5) = repmat([0 0 0.5 0],number_load_bus,1);
+% sample: load_con = [...
+% 1  0 0 .5 0;
+% ...]
+
+
+lmod_con = zeros(number_load_bus,7);
+lmod_con(:,1) = transpose(1:1:number_load_bus);
+lmod_con(:,2) = load_bus_index;
+lmod_con(:,3:7) = repmat([100 3 -3 1 0.5],number_load_bus,1);
+
+
+%OLC_mod=lmod_con(:,1);         % all loads can do OLC
+OLC_mod = zeros(size(OLC_bus));
+iCount = 1;
+for i=1:length(load_bus_index)
+   for j=1:length(OLC_bus)
+      if OLC_bus(j) == load_bus_index(i)
+         OLC_mod(j) = i;
+      end
+   end
+   for j=1:length(disturbance_bus)
+      if disturbance_bus(j) == load_bus_index(i)
+         disturbance_mod(j) = i;
+      end
+   end
+end
+%OLC_mod(disturbance_mod)=[];
+%OLC_bus = lmod_con(OLC_mod,2);
+
+controlled_load = zeros(length(OLC_bus),1);
+OLCtime=0.01;
+
+%load_setpoint = bus(load_bus_index,6);
+%OLC_setpoint = load_setpoint(OLC_mod);
+OLC_setpoint = bus(OLC_bus,6);
+if strcmp(METHOD, 'DGLB')   
+   OLC_capacity = DC_flex*[-DC_DEMAND, DC_DEMAND];  
+elseif strcmp(METHOD, 'OLC')
+   OLC_capacity = [-OLC_setpoint*OLC_capacity_factor, OLC_setpoint*OLC_capacity_factor];
+else
+   error(['Running ' METHOD]);
+end
+
+
+OLC_gain = 25* OLC_setpoint ; % uniform cost function 1/2*k*p^2, but for load need to rescale by base power
+
+ % Add governor model for OFC simulation (Zhao, Low, CDC2014)
+% governor model
+% tg_con matrix format
+%column data unit 
+% 1 turbine model number (=1)
+% 2 machine number
+% 3 speed set point wf pu
+% 4 steady state gain 1/R pu
+% 5 maximum power order Tmax pu on generator base
+% 6 servo time constant Ts sec
+% 7 governor time constant Tc sec
+% 8 transient gain time constant T3 sec
+% 9 HP section time constant T4 sec
+% 10 reheater time constant T5 sec
+ tg_con = [... 
+ 1  1  1  25.0  1.0  0.1  0.5 0.0 1.25 5.0; 
+ 1  2  1  25.0  1.0  0.1  0.5 0.0 1.25 5.0; 
+ 1  3  1  25.0  1.0  0.1  0.5 0.0 1.25 5.0; 
+ 1  4  1  25.0  1.0  0.1  0.5 0.0 1.25 5.0;
+ 1  5  1  25.0  1.0  0.1  0.5 0.0 1.25 5.0; 
+ 1  6  1  25.0  1.0  0.1  0.5 0.0 1.25 5.0; 
+ 1  7  1  25.0  1.0  0.1  0.5 0.0 1.25 5.0; 
+ 1  8  1  25.0  1.0  0.1  0.5 0.0 1.25 5.0;
+ 1  9  1  25.0  1.0  0.1  0.5 0.0 1.25 5.0; 
+ 1  10  1  25.0  1.0  0.1  0.5 0.0 1.25 5.0;
+ ]; 
+% 
+ tg_con(:,4) = 0;    %redesign governor control at mtg_sig.m
+ tg_con(:,5) = 2;   
+tg_con(:,5) = generator_setpoint_macpu*(1+generator_capacity_factor);
+ if (~isempty(remove_governor))
+     tg_con(remove_governor,4) = 0;
+ end;
+
+Q_glb = zeros(1,1);
+N = length(OLC_bus);
+non_dc_buses = [];
+dc_alpha = 1;
+dc_beta = 0.2;
+big_L = sum(OLC_setpoint); % assuming workload are equivalent to power
+load_freq = ones(length(OLC_bus),1);
+L = zeros(length(OLC_bus),1);
+d = zeros(length(OLC_bus),1);
+
+%% control parameters
+global gamma a c Phi
+
+if ~exist('IS_MULTIPLE_RUN','var')
+    % gamma
+    % gamma = 0.01; % 0.01 works, 
+    % gamma = 0.1; % unstable gamma = 0.1, a = 0.1;
+    gamma = 1;
+    % a
+    ASSUMPTION = 1;
+    if ASSUMPTION==1 %case Phi <= All a_j
+    %     randTemp = [0.1270  0.8147    0.9058  0.9134    0.6324    0.0975];
+        randTemp = [1    1    1    1    1    1];
+        randTemp = randTemp*DC_num/(sum(randTemp));
+    %     randTemp = randTemp*0.5;  % unstable
+        randTemp = randTemp*.5;  % stable
+    %     randTemp = randTemp*0.1;  % stable
+
+        a = randTemp;    
+
+    else
+        %case Phi > one of a_j
+        %randTemp = [0.1270  0.8147    0.9058+1  0.9134    0.6324    0.0975]; % stable    
+        %randTemp = [0.1270  0.8147    0.9058+5  0.9134    0.6324    0.0975]; % stable
+    %     randTemp = [0.1270  0.8147    0.9058+100  0.9134    0.6324    0.0975]; % stable
+
+    %     randTemp = [0.1270  0.8147    0.9058  0.9134    0.6324    0.0975] + 1; % stable
+        randTemp = [0.1270  0.8147    0.9058  0.9134    0.6324    0.0975] + 1.1; % ?
+    %     randTemp = [0.1270  0.8147    0.9058  0.9134    0.6324    0.0975] + 2; % unstable
+    %     randTemp = [0.1270  0.8147    0.9058  0.9134    0.6324    0.0975] + 10; % unstable
+
+        randTemp = randTemp*DC_num/(sum(randTemp)); % normalize randTemp, sum(randTemp) == DC_num. 
+        a = randTemp/1; % scale down to find the unstable point.
+    end
+
+    % c
+    % randTemp = [0.2785    0.5469    0.9575    0.9649    0.1576    0.9706];
+    % randTemp = randTemp*DC_num/(sum(DC_num)); % normalize randTemp, sum(randTemp) == DC_num.
+    % c = randTemp*150; % TODO: adjust c to control the range of load control.
+    c = ones(size(OLC_gain))./OLC_gain; c = c';
+
+    % Phi
+    temp1 =  gamma .* (sum(a./c));
+    temp2 =  gamma .* (sum(a.^2./c));
+    Phi = temp1./(1+temp2);
+    % 
+    if Phi <= min(ones(size(a))./a) % Phi <= all 1/a_j
+        disp('[INFO] Phi <= all 1/a_j');
+        if ASSUMPTION~=1
+            error('[INFO] Phi must be > one of 1/a_j');
+        end
+    else
+        if ASSUMPTION==1
+            error('[INFO] Phi  must be <= min(ones(size(a))./a)');
+        end
+        disp('[INFO] Phi > one of 1/a_j');
+    end
+    Phi;
+    ones(size(a))./a;
+    Phi*a;
+    1-mean(Phi*a);
+end
+
+%% linear model
+global g;
+randTemp = [0.1270  0.8147    0.9058  0.9134    0.6324    0.0975];
+randTemp = randTemp*DC_num/(sum(randTemp));
+% g = - randTemp;
+% g = randTemp;
+g = -0.5*randTemp;
+
+
+%% 
+
+fprintf('===========================================\n');
+fprintf('===========================================\n');
+fprintf('Number of buses in the power network: %d\n',length(bus(:,1)));
+fprintf('Number of data center buses: %d\n',length(OLC_bus));
+fprintf('Frequency Base: %d (Hz) \n',SYS_FREQ);
+fprintf('Power Base: %d (MVA) \n',BASE_POWER);
+fprintf('===========================================\n');
+fprintf('===========================================\n');
+
+
+%%
+OUTPUT = '';

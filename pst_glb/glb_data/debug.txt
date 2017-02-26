@@ -1,0 +1,13 @@
+1. lmod_con: matrix of lmod parameters supplied by user
+
+2. lmod_sig: supplementary signal into the reference input, Vsup
+
+p_j at new steady state can be obtained from global variables lmod_sig 
+	The loads at these buses must be declared as non-conforming loads in order for them to be modulated. In this system model they are declared as non-conforming loads, and are 50/50 constant current/constant 
+impedance.
+
+3. lmod contains the equations of a load modulation control system for the initialization
+
+4. lmod_st: load modulation state
+
+5. 
