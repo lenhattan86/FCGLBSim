@@ -6,7 +6,7 @@ figure_settings;
 
 PLOTS = [true false false false false true];
 
-X_LIM = 60;
+X_LIM = 30;
 
 % folder = 'output01/';
 folder = 'output/';
@@ -20,9 +20,9 @@ optimalFile = 'GenLoss_centralized_0.5_0.01';
 
   
 figIdx = 0;
-  strLegends = {strOLC, strProposed, strOptimal};
-  lines = { lineOLC, lineProposed, lineOptimal};
-  colors = {colorOLC, colorProposed, colorOptimal};
+  strLegends = {strOLC, strProposed, strNone, strOptimal};
+  lines = { lineOLC, lineProposed, lineNone, lineOptimal};
+  colors = {colorOLC, colorProposed, colorNone, colorOptimal};
 %%
 if PLOTS(1)
 

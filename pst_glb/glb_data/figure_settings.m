@@ -43,9 +43,10 @@ figOneCol = [0 0 5 3];
 %% lines
 lineWidth = 1.5;
 
-lineProposed = '--';
-lineOLC = ':';
-lineOptimal = '-.';
+lineProposed = '-';
+lineOLC = '-.';
+lineOptimal = '--';
+lineNone = ':';
 
 %% bars
 barWidth = 0.7;
@@ -53,5 +54,6 @@ barWidth = 0.7;
 %% colors
 colorProposed = [237    125    49]/255;
 colorOLC = [165    165    165]/255;
-colorOptimal = [68    71   196]/255;
+colorNone = [68    71   196]/255;
+colorOptimal = [0    0   0]/255;
 
