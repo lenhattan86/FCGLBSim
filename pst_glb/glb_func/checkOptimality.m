@@ -1,12 +1,12 @@
 final_delta = controlled_load(:,length(controlled_load(1,:)));
 %% sum(a * delta) - s = 0
 mu_final = mu(length(mu));
-s = mu_final*(1/fcp_alpha);
+s = mu_final*(1/fcp_gamma);
 demand = sum(a'.*final_delta);
 s_equality_constraint = demand - s
 %% g'(s) - mu = 0
 s = sum(a'.*final_delta);
-s_equality_constraint = fcp_alpha*s - mu_final
+s_equality_constraint = fcp_gamma*s - mu_final
 
 %% sum(delta_j)
 delta_sum = sum(final_delta);

@@ -1,6 +1,6 @@
 classdef RunningMode
    enumeration
-      GenLoss, RenGen, LoadChange, Motivation
+      GenLoss, RenGen, LoadChange, Motivation, None
    end       
 end
 

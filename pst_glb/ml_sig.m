@@ -10,8 +10,8 @@ global bus_v  OLC_gain  OLC_mod OLCtime disturbance_size disturbance_mod control
 global OLC_capacity
 global GLB_bus
 global METHOD RUNNING_MODE INCIDENT_START
-global load_freq bus dc_buses non_dc_buses big_L dc_fcp_alpha dc_beta load_bus_index Q_glb L d d_set
-global gamma a c Phi mu fcp_lambda fcp_alpha fcp_D sumOfD_j
+global load_freq bus dc_buses non_dc_buses big_L dc_beta load_bus_index Q_glb L d d_set
+global gamma a c Phi mu fcp_lambda fcp_D sumOfD_j fcp_gamma
 global g
 
 control_d = zeros(length(OLC_bus),1);
@@ -55,13 +55,12 @@ if METHOD==Method.proposed
 %             disp('debug');
 %           end
           % algorithm parts   
-          control_d = OLC_gain.*(freq_deviation - a'*mu(k));   
+          control_d = (ones(size(c))./c).*(freq_deviation - a*mu(k));   
           control_d=max(min(control_d,OLC_capacity(:,2)),OLC_capacity(:,1)); 
-
-          fcp_lambda = 0.0001;        
-          mu(k+OLCstep) = mu(k) + fcp_lambda * (sum(a'.*control_d) - mu(k)/fcp_alpha); 
+  
+          mu(k+OLCstep) = mu(k) + fcp_lambda * (sum(a.*control_d) - mu(k)/(fcp_gamma)); 
           lmod_sig(OLC_mod,k)= lmod_sig(OLC_mod,k) + control_d;
-          controlled_load(:,k) = control_d;     
+          controlled_load(:,k) = control_d;
         else
           controlled_load(:,k) = control_d;
         end
@@ -100,7 +99,7 @@ elseif METHOD == Method.optimal
       warning off;
       cvx_begin quiet
         variables d_j(N) w        
-        minimize( fcp_alpha/2* ((sum(a'.*d_j))^2) + ...
+        minimize( (fcp_gamma)/2* ((sum(a.*d_j))^2) + ...
               sum((c'/2).*(d_j.^2)) + sumOfD_j*w^2 ...
               )        
         subject to
@@ -174,7 +173,7 @@ elseif METHOD == Method.OLC
             (temp_delta_theta-2*pi).*(temp_delta_theta>1.9*pi)+...
             (temp_delta_theta+2*pi).*(temp_delta_theta<-1.9*pi);
         freq_deviation = freq_deviation/OLCtime/(120*pi);
-        control_d = OLC_gain.*(freq_deviation);
+        control_d = (ones(size(c))./c).*(freq_deviation);
         load_freq(:, k) = freq_deviation+1; % convert from rad to normalized Hz (1 = 60hz)  
         control_d=max(min(control_d,OLC_capacity(:,2)),OLC_capacity(:,1));    %frequency-pu
         controlled_load(:,k) = control_d;

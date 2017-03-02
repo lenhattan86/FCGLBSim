@@ -2,6 +2,7 @@ clear; close all; clc; clear global;
 addpath('glb_data');
 addpath('glb_func');
 figure_settings;
+warning off;
 %%
 
 PLOTS = [true true];
@@ -9,10 +10,8 @@ X_LIM = 35;
 
 % folder = 'output01/';
 folder = 'output/';
-
-
   
-optimalFile = 'LoadChange_centralized_0.5_0.01';
+optimalFile = 'GenLoss_optimal_0.5_0.01_1';
   
 figIdx = 0;
 strLegends = {strOLC, strProposed, strOptimal};
@@ -22,28 +21,33 @@ colors = {colorOLC, colorProposed, colorOptimal};
 %%
 if PLOTS(1)
     dataFiles = {
-      'LoadChange_OLC_0.5_0.01';
-      'LoadChange_proposed_0.5_0.01';   
+      'GenLoss_OLC_0.5_0.01_1';
+      'GenLoss_proposed_0.5_0.01_1';   
     };
     figure; 
     figSize = figOneCol;
     
-    for i=1:length(dataFiles)
-      load([folder dataFiles{i} '.mat']);
+    for iFile=1:length(dataFiles)
+      load([folder dataFiles{iFile} '.mat']);
       d_j = controlled_load(:,length(controlled_load(1,:)));
-      costs(i) = fcp_alpha/2*(sum(a.*d_j')).^2 + (ones(size(OLC_gain))./OLC_gain)' * (d_j.^2)/2;      
+      costs(iFile,1) = sum((c/2).* (d_j.^2)/2);  
+      costs(iFile,2) = (fcp_alpha*fcp_gamma)/2*(sum(a.*d_j')).^2;  
     end
     
-    load([folder optimalFile '.mat'],'optCost');    
-    costs(i+1) = optCost;    
+    load([folder optimalFile '.mat']);    
+    costs(iFile+1,1) = sum((c/2).* (d_j.^2)/2);   
+    costs(iFile+1,2) = (fcp_alpha*fcp_gamma)/2*(sum(a.*d_j')).^2;   
     
-    hBar = bar(costs, 0.2);
-    set(gca,'XTickLabel',strLegends,'FontSize',fontAxis);
+    costs = WEIGHT*costs;    
+    costs = costs*(BASE_POWER^2);
+    
+    hBar = bar(costs, 0.2, 'stacked');
+    set(gca,'XTickLabel', strLegends,'FontSize',fontAxis);
     hold on;
     
-%     legend(hBar, strLegends,'Location','southeast','FontSize', fontLegend,'Orientation','horizontal');
+    legend(hBar, {strLocalCost,strGlobalCost},'Location','northeast','FontSize', fontLegend,'Orientation','horizontal');
     xlim([0.5, 3.5]);    
-    ylabel('global + local costs','fontname', fontName,'fontsize', fontAxis);    
+    ylabel(strTotalCost,'fontname', fontName,'fontsize', fontAxis);    
     set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);
     
     if is_printed
@@ -59,8 +63,8 @@ end
 %%
 return;
 %%
-for i=1:length(fileNames)
-    fileName = fileNames{i};
+for iFile=1:length(fileNames)
+    fileName = fileNames{iFile};
     epsFile = [ LOCAL_FIG fileName '.eps'];
     pdfFile = [ fig_path fileName '.pdf']    
     cmd = sprintf(PS_CMD_FORMAT, epsFile, pdfFile);

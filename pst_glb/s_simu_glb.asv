@@ -35,7 +35,7 @@ if useLocalParameters
   DELAY = 0.01;  
   FLEX = 0.4;
   IS_PLOT = true;
-  WEIGHT = 5;
+  WEIGHT = 1;
   GAMMA = 0.08;
 else
   IS_PLOT = false;

@@ -1,0 +1,11 @@
+http://www.zdnet.com/article/aws-cloud-computing-ops-data-centers-1-3-million-servers-creating-efficiency-flywheel/
+
+http://venturebeat.com/2016/04/28/amazon-web-services-grabs-2-5-billion-in-revenue-in-q1-2016-up-63-over-last-year/
+
+
+@misc{aws_revenue,
+	title ={Amazon Web Services grabs $2.5 billion in revenue in Q1 2016, up 63.8% over last year},
+	howpublished = {https://goo.gl/G6Ag6H},
+	month={Jun},
+	year={2016}
+}

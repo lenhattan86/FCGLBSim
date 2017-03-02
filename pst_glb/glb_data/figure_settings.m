@@ -2,8 +2,7 @@
 
 OUTPUT_FOLDER = 'output/';
 LOCAL_FIG = 'figs/';
-% fig_path = '../../FCGLB/full_paper_5/images/';
-fig_path = '../../FCGLB/cdc_17_paper/images/';
+fig_path = 'C:\Users\NhatTan\Dropbox\Papers\FCGLB\FCGLB\cdc_17_paper\images\';
 
 PS_CMD_FORMAT='ps2pdf -dEmbedAllFonts#true -dSubsetFonts#true -dEPSCrop#false -dPDFSETTINGS#/prepress %s %s';
 %% String
@@ -12,13 +11,18 @@ strOLC = 'OLC';
 strOptimal = 'Optimal';
 strSubOptimal = 'suboptimal';
 strFCOptimal = 'FC optimal';
+
 strFCLocal = 'FC independent';
 
 strNone = 'none';
 
+strDelay = 'delay (sec)';
+
 strFrequency = 'frequency (Hz)';
 strTime = 'time (seconds)';
 strCost = 'cost';
+
+strTotalCost = 'total cost (USD/sec)';
 
 strGlobalCost = 'interdependent';
 strLocalCost = 'independent';

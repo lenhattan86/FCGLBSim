@@ -2,11 +2,12 @@ clear; close all; clc; clear global;
 addpath('glb_data');
 addpath('glb_func');
 figure_settings;
+warning off;
 %%
 
-PLOTS = [true false false false false true];
+PLOTS = [false false false false false false true];
 
-X_LIM = 30;
+X_LIM = 60;
 
 % folder = 'output01/';
 folder = 'output/';
@@ -34,9 +35,9 @@ if PLOTS(1)
       plot(t,load_freq*60, lines{i}, 'linewidth',lineWidth,'Color',colors{i});
       hold on;
     end
-    legend(hPlot, strLegends,'Location','best','FontSize', fontLegend,'Orientation','horizontal');
+    legend(hPlot, strLegends, 'Location','best','FontSize', fontLegend,'Orientation','horizontal');
     
-    xlabel('Time (sec)','fontname', 'Arial','fontsize', fontAxis);
+    xlabel('Time (sec)', 'fontname', 'Arial','fontsize', fontAxis);
     ylabel('Frequency (Hz)','fontname', 'Arial','fontsize', fontAxis);
     % ylim([59.90, 60.0]); 
     xlim([0, X_LIM]);
@@ -138,7 +139,7 @@ if PLOTS(4)
         print ('-depsc', epsFile);
     end
 end
-%%
+%% demand flexiblity
 if PLOTS(5)
     dataFiles = {
        'GenLoss_proposed_0.1_0.01_1'...
@@ -175,7 +176,7 @@ if PLOTS(5)
 %     end
 end
 
-%%
+%% weight of frequency deviation (beta)
 if PLOTS(6)
     dataFiles = {
        'GenLoss_proposed_0.5_0.01_0.1'...
@@ -210,7 +211,38 @@ if PLOTS(6)
 %         print ('-depsc', epsFile);
 %     end
 end
+%% weight of frequency deviation (beta)
+if PLOTS(7)
+    dataFiles = {'GenLoss_proposed_0.5_0.01_1_1'...
+            ,'GenLoss_proposed_0.5_0.02_1_1'...
+            ,'GenLoss_proposed_0.5_0.04_1_1'...
+            ,'GenLoss_proposed_0.5_0.08_1_1'...
+            ,'GenLoss_proposed_0.5_0.16_1_1'...
+            }; 
+    figure; 
+    for i=1:length(dataFiles)      
+      load([folder dataFiles{i} '.mat']);
+      hPlot(i) = plot(t,load_freq(1,:)*60, 'linewidth', lineWidth);  hold on;
+      hold on;
+    end    
+    
+    figSize = figOneCol;
+    
+    xlabel('Time (sec)','fontname', 'Arial','fontsize', fontAxis);
+    ylabel('Frequency (Hz)','fontname', 'Arial','fontsize', fontAxis);
+%     strLegends={'10%','20%','30%','40%','50%','60%','70%','80%','90%','100%'};
+%     legend(hPlot, strLegends,'Location','eastoutside','FontSize', fontLegend,'Orientation','vertical');
+    set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);
+    
+%     if is_printed
+%       figIdx=figIdx +1;
+%       fileNames{figIdx} = 'load_freq_flex';
+%       epsFile = [ LOCAL_FIG fileNames{figIdx} '.eps'];
+%         print ('-depsc', epsFile);
+%     end
+end
 %%
+warning on;
 return;
 %%
 for i=1:length(fileNames)
