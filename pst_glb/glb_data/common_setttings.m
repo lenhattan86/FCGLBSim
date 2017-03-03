@@ -1,5 +1,5 @@
 global RUNNING_MODE METHOD INCIDENT_START
-global gamma a c Phi mu fcp_lambda fcp_alpha sumOfD_j disturbance_gen_mod mac_scale fcp_beta fcp_gamma
+global gamma a c Phi mu fcp_lambda fcp_alpha sumOfD_j disturbance_gen_mod mac_scale fcp_beta fcp_gamma NEW_ENG_BASE
 
 SYS_FREQ=60;
 DEBUG = false;
@@ -10,7 +10,7 @@ if data(1)
     pmech_max = 0.2500;
 %     disturbance_size = 1*[1, 1 , 1];    sumOfD_j =  0.0;     % in pu
 %     disturbance_bus = [ 4, 8, 20];     % buses % for datane_glb
-    disturbance_size = 50*[1]; sumOfD_j = 0.0;     % MW
+    disturbance_size = 50*[1]; sumOfD_j = 0.0;     % 50 MW
 %     disturbance_bus = [4];     % buses % for datane_glb    
     disturbance_bus = [39];     % buses % for datane_glb
     num_generators = 10;
@@ -37,12 +37,17 @@ dfile = lower(dfile(1:lfile-2));
 eval(dfile);
 
 % BASE_POWER = 14000/sum(bus(:,6)); % MW
+NEW_ENG_BASE = 14000/sum(bus(:,6));
 BASE_POWER = 100;
-DC_CAPACITY = 30; % 50 MW % datane_glb
-DC_DEMAND = 25; % 50 MW % datane_glb
+DC_SCALEUP = 1;
+DC_CAPACITY = 30*DC_SCALEUP; % 50 MW % datane_glb
+DC_CAPACITY = DC_CAPACITY/NEW_ENG_BASE*BASE_POWER;
+DC_DEMAND = 25*DC_SCALEUP; % 50 MW % datane_glb
+DC_DEMAND = DC_DEMAND/NEW_ENG_BASE*BASE_POWER;
 DC_CAPACITY = DC_CAPACITY/BASE_POWER;
 DC_DEMAND = DC_DEMAND/BASE_POWER;
 DC_num = 10;
+disturbance_size = disturbance_size/NEW_ENG_BASE*BASE_POWER;
 
 %%
 
@@ -193,6 +198,9 @@ d = zeros(length(OLC_bus),1);
 
 %% control parameters
 
+GAMMA = GAMMA*(NEW_ENG_BASE/BASE_POWER)^2;
+GAMMA = GAMMA/WEIGHT;
+
 fcp_lambda  = 0.001; % step size
 fcp_gamma  = GAMMA;
 fcp_beta  = WEIGHT;
@@ -204,9 +212,10 @@ c = [ 0.0877    0.0644    0.1763    0.0762    0.0583    0.1124    0.0807    0.16
 % c = c*(BASE_POWER^2);
 % c  = c/ 10;
 % 1/mean(c)
+c = c*(NEW_ENG_BASE/BASE_POWER)^2;
 
-aRange = [1/2 1/1.1];
-aMean = 1/1.8;
+% aRange = [1/2 1/1.1];
+% aMean = 1/1.8;
 % a = (aMean-mean(aRange))/3*randn(1,DC_num) + aMean
 % a = [0.5724    0.5293    0.5031    0.5548    0.7054    0.5261    0.6548    0.5327    0.5655    0.5141]'; 
 a = [ 1/1.2  1/1.65  1/1.75  1/1.8  1/1.91  1/1.92  1/1.93  1/1.97  1/1.98  1/2]'; 
@@ -214,7 +223,7 @@ a = [ 1/1.2  1/1.65  1/1.75  1/1.8  1/1.91  1/1.92  1/1.93  1/1.97  1/1.98  1/2]
 % a = a/10;
 
 % scale up/down the costs
-a = a/fcp_beta;
+%a = a/fcp_beta;
 c = c/fcp_beta;
 
 %%

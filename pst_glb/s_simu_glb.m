@@ -15,7 +15,7 @@ jay = sqrt(-1);
 pst_var % set up global variables
 
 %% Setting parameters by Tan N. Le
-global RUNNING_MODE METHOD INCIDENT_START DELAY FLEX END_TIME WEIGHT
+global RUNNING_MODE METHOD INCIDENT_START DELAY FLEX END_TIME WEIGHT NEW_ENG_BASE
 
 addpath('glb_data');
 addpath('glb_func');
@@ -27,15 +27,16 @@ if useLocalParameters
   RUNNING_MODE = RunningMode.LoadChange;
 %   RUNNING_MODE = RunningMode.GenLoss;
 %   RUNNING_MODE = RunningMode.None;
-  METHOD = Method.proposed;
+%  METHOD = Method.proposed;
 %   METHOD = Method.OLC;
-%   METHOD = Method.NONE;
+   METHOD = Method.NONE;
   INCIDENT_START = 5; % seconds
 %   DELAY = 0.01; % 1 secs
   DELAY = 0.01;  
   FLEX = 0.4;
   IS_PLOT = true;
-  WEIGHT = 5;
+  WEIGHT = 100;
+  BASE_POWER = 100;
   GAMMA = 0.08;
 else
   IS_PLOT = false;
@@ -1173,7 +1174,7 @@ clear z z1 z_dpw z_pss z_tg zdc zdcl ze zig zm
 
 
 %% plot results - by Tan N. LE
-checkOptimality;
+%checkOptimality;
 matFile = [ strScenario '.mat'];
 save(['output/' matFile]);
 if(IS_PLOT)
