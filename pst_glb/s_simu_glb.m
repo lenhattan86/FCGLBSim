@@ -27,17 +27,17 @@ if useLocalParameters
   RUNNING_MODE = RunningMode.LoadChange;
 %   RUNNING_MODE = RunningMode.GenLoss;
 %   RUNNING_MODE = RunningMode.None;
-%  METHOD = Method.proposed;
+  METHOD = Method.proposed;
 %   METHOD = Method.OLC;
-   METHOD = Method.NONE;
+%   METHOD = Method.NONE;
   INCIDENT_START = 5; % seconds
 %   DELAY = 0.01; % 1 secs
   DELAY = 0.01;  
   FLEX = 0.4;
   IS_PLOT = true;
-  WEIGHT = 100;
-  BASE_POWER = 100;
-  GAMMA = 0.08;
+  WEIGHT = 75; %$/MW-Hz
+  BASE_POWER = 100; %MW
+  GAMMA = 0.08; %$/MW^2
 else
   IS_PLOT = false;
 end

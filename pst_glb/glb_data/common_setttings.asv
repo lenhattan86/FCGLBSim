@@ -37,15 +37,15 @@ dfile = lower(dfile(1:lfile-2));
 eval(dfile);
 
 % BASE_POWER = 14000/sum(bus(:,6)); % MW
-NEW_ENG_BASE = 14000/sum(bus(:,6)); %14 GW scaled down as Ratio of total power of simulator
-BASE_POWER = 100; % in MW
+NEW_ENG_BASE = 14000/sum(bus(:,6)); %14 GW scaled down as Ratio of t
+BASE_POWER = 100;
 DC_SCALEUP = 1;
 DC_CAPACITY = 30*DC_SCALEUP; % 50 MW % datane_glb
-DC_CAPACITY = DC_CAPACITY/NEW_ENG_BASE*BASE_POWER; %scale down DC to simulator total power
-DC_DEMAND = 25*DC_SCALEUP; % 50 MW % datane_glb 
-DC_DEMAND = DC_DEMAND/NEW_ENG_BASE*BASE_POWER; %scale down DC to simulator total power
-DC_CAPACITY = DC_CAPACITY/BASE_POWER; %scale down to pu
-DC_DEMAND = DC_DEMAND/BASE_POWER; %scale down to pu
+DC_CAPACITY = DC_CAPACITY/NEW_ENG_BASE*BASE_POWER;
+DC_DEMAND = 25*DC_SCALEUP; % 50 MW % datane_glb
+DC_DEMAND = DC_DEMAND/NEW_ENG_BASE*BASE_POWER;
+DC_CAPACITY = DC_CAPACITY/BASE_POWER;
+DC_DEMAND = DC_DEMAND/BASE_POWER;
 DC_num = 10;
 disturbance_size = disturbance_size/NEW_ENG_BASE*BASE_POWER;
 
@@ -198,10 +198,9 @@ d = zeros(length(OLC_bus),1);
 
 %% control parameters
 
-GAMMA = GAMMA*(NEW_ENG_BASE/BASE_POWER)^2; %scale from 14 GW to total power of simulator
-GAMMA = GAMMA*BASE_POWER^2; %scale down to pu
-WEIGHT = WEIGHT*NEW_ENG_BASE/BASE_POWER; %scale from 14 GW to total power of simulator
-WEIGHT = WEIGHT*BASE_POWER*SYS_FREQ; %Scaling down to pu for power and frequency
+GAMMA = GAMMA*(NEW_ENG_BASE/BASE_POWER)^2;
+GAMMA = GAMMA*BASE_POWER^2;
+WEIGHT = WEIGHT*BASE_POWER*60; %Scaling down to pu for power and frequency
 GAMMA = GAMMA/WEIGHT; %cost in terms of freq dev.
 
 fcp_lambda  = 0.001; % step size
