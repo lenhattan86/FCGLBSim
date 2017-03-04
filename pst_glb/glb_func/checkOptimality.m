@@ -9,7 +9,7 @@ s = sum(a'.*final_delta);
 s_equality_constraint = fcp_gamma*s - mu_final
 
 %% sum(delta_j)
-delta_sum = sum(final_delta);
+delta_sum = sum(final_delta)/BASE_POWER*NEW_ENG_BASE;
 delta_sum
 %%
 sumOfD_j = (sum(disturbance_size)+delta_sum)/(1-mean(load_freq(:,length(load_freq(1,:)))));

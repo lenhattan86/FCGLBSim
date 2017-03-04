@@ -1,4 +1,4 @@
-SINGLE_RUN = true;
+SINGLE_RUN = false;
 %%
 if ~exist('IS_MULTIPLE_RUN','var') || SINGLE_RUN
     clear all
@@ -24,8 +24,8 @@ addpath('glb_classes');
 
 if useLocalParameters
   END_TIME = 35;
-  RUNNING_MODE = RunningMode.LoadChange;
-%   RUNNING_MODE = RunningMode.GenLoss;
+%   RUNNING_MODE = RunningMode.LoadChange;
+  RUNNING_MODE = RunningMode.GenLoss;
 %   RUNNING_MODE = RunningMode.None;
   METHOD = Method.proposed;
 %   METHOD = Method.OLC;
@@ -36,7 +36,6 @@ if useLocalParameters
   FLEX = 0.4;
   IS_PLOT = true;
   WEIGHT = 75; %$/MW-Hz
-  BASE_POWER = 100; %MW
   GAMMA = 0.08; %$/MW^2
 else
   IS_PLOT = false;
@@ -1174,8 +1173,9 @@ clear z z1 z_dpw z_pss z_tg zdc zdcl ze zig zm
 
 
 %% plot results - by Tan N. LE
-%checkOptimality;
+checkOptimality;
 matFile = [ strScenario '.mat'];
+strScenario
 save(['output/' matFile]);
 if(IS_PLOT)
   plotFrequencyTime(matFile, true);

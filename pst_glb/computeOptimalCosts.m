@@ -1,9 +1,12 @@
 %% global OLC_bus sumOfD_j OLC_capacity fcp_alpha a c
-common_setttings;
-load(['output/' char(RUNNING_MODE) '_' char(Method.proposed) '_' num2str(FLEX) '_' num2str(DELAY) '_' num2str(WEIGHT) '.mat'], 'load_freq');
-load(['output/' char(RUNNING_MODE) '_' char(Method.proposed) '_' num2str(FLEX) '_' num2str(DELAY) '_' num2str(WEIGHT) '.mat'], 'sumOfD_j');
-sumOfD_j = 0;
 METHOD = Method.optimal;
+strScenario = [char(RUNNING_MODE) '_' char(METHOD) '_' num2str(FLEX) '_' num2str(DELAY) '_' num2str(WEIGHT)  '_' num2str(GAMMA)];
+
+common_setttings;
+% load(['output/' char(RUNNING_MODE) '_' char(Method.proposed) '_' num2str(FLEX) '_' num2str(DELAY) '_' num2str(WEIGHT) '.mat'], 'load_freq');
+% load(['output/' char(RUNNING_MODE) '_' char(Method.proposed) '_' num2str(FLEX) '_' num2str(DELAY) '_' num2str(WEIGHT) '.mat'], 'sumOfD_j');
+sumOfD_j = 0;
+
 
 w = 1- mean(load_freq(:,length(load_freq(1,:))));
 N =  length(OLC_bus);      
@@ -11,7 +14,7 @@ N =  length(OLC_bus);
 warning off;
 cvx_begin quiet
   variables delta_j(N)        
-  minimize( (fcp_alpha*fcp_gamma)/2* ((sum(a'.*delta_j))^2) + ...
+  minimize( (fcp_gamma)/2* ((sum(a.*delta_j))^2) + ...
         sum((c/2).*(delta_j.^2)) + sumOfD_j/2*w^2 ...
         )        
   subject to
@@ -29,6 +32,6 @@ optVal = cvx_optval;
 optCost = cvx_optval - sumOfD_j/2*w^2;
 
 %%
-strScenario = [char(RUNNING_MODE) '_' char(METHOD) '_' num2str(FLEX) '_' num2str(DELAY) '_' num2str(WEIGHT)]
+strScenario
 matFile = [ strScenario '.mat'];
 save(['output/' matFile]);

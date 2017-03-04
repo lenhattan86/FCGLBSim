@@ -210,7 +210,7 @@ fcp_beta  = WEIGHT;
 mu = zeros(1,1);
 
 % c is eta, 0.11*2.*rand(1,DC_num) + 0
-%mean(c) =  0.11/POWER_BASE^2
+% mean(c) =  0.11/POWER_BASE^2
 c = [ 0.0877    0.0644    0.1763    0.0762    0.0583    0.1124    0.0807    0.1627    0.1154    0.1770]'; 
 % c = c*(BASE_POWER^2);
 % c  = c/ 10;
@@ -231,8 +231,9 @@ a = [ 1/1.2  1/1.65  1/1.75  1/1.8  1/1.91  1/1.92  1/1.93  1/1.97  1/1.98  1/2]
 c = c/fcp_beta; %cost in terms of freq dev
 
 %%
-if RUNNING_MODE == RunningMode.GenLoss
-    disturbance_size = disturbance_size/mac_con(1,3);     
+if RUNNING_MODE == RunningMode.GenLoss && METHOD ~= Method.optimal
+%     disturbance_size = disturbance_size/mac_con(1,3);    
+    disturbance_size = disturbance_size/BASE_POWER;  
 else
     disturbance_size = disturbance_size/BASE_POWER;
 end

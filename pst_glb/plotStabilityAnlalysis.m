@@ -5,19 +5,23 @@ figure_settings;
 warning off;
 %%
 
-PLOTS = [false false false false false false true];
+PLOTS = [true true false false false false false];
 
-X_LIM = 60;
+X_LIM = 35;
 
 % folder = 'output01/';
 folder = 'output/';
-
+GAMMA = 0.08;
+DELAY = 0.01;
+FLEX = 0.4;
+WEIGHT = 75;
+extra = ['_' num2str(FLEX) '_' num2str(DELAY) '_' num2str(WEIGHT) '_' num2str(GAMMA)];
 dataFiles = {
-    'GenLoss_OLC_0.5_0.01_1';
-    'GenLoss_proposed_0.5_0.01_1';   
-    'GenLoss_NONE_0.5_0.01_1'; 
+    ['GenLoss_OLC' extra];
+    ['GenLoss_proposed' extra];   
+    ['GenLoss_NONE' extra]; 
     };  
-optimalFile = 'GenLoss_centralized_0.5_0.01';
+optimalFile = ['GenLoss_optimal' extra];
 
   
 figIdx = 0;
@@ -26,7 +30,6 @@ figIdx = 0;
   colors = {colorOLC, colorProposed, colorNone, colorOptimal};
 %%
 if PLOTS(1)
-
     figure; 
     figSize = figOneCol;
     for i=1:length(dataFiles)
@@ -54,18 +57,21 @@ end
 if PLOTS(2) 
     figure; 
     figSize = figOneCol;
-    for i=1:length(dataFiles)
+    for i=2:length(dataFiles)-1
       load([folder dataFiles{i} '.mat']);
-      hPlot(i) = plot(t,controlled_load(1,:), lines{i}, 'linewidth', lineWidth,'Color',colors{i});
-      hold on;
-      plot(t,controlled_load, lines{i}, 'linewidth',lineWidth,'Color',colors{i});
+%       hPlot(i) = plot(t, controlled_load(1,:), lines{i}, 'linewidth', lineWidth,'Color',colors{i});
+%       hold on;
+%       plot(t, controlled_load*NEW_ENG_BASE/BASE_POWER, lines{i}, 'linewidth',lineWidth,'Color',colors{i});
+      plot(t, controlled_load*NEW_ENG_BASE/BASE_POWER, '-.','linewidth',lineWidth);
       hold on;
     end
-      
-    legend(hPlot, strLegends,'Location','best','FontSize', fontLegend,'Orientation','horizontal');
+    a = 1:10 ;
+%     strLegends = strread(num2str(a),'%s');
+%     legend(hPlot, strLegends,'Location','best','FontSize', fontLegend,'Orientation','horizontal');
+%     legend(strLegends,'Location','best','FontSize', fontLegend-2,'Orientation','horizontal','Right');
     xlim([0, X_LIM]);
     xlabel('Time (sec)','fontname', 'Arial','fontsize', fontAxis);
-    ylabel('x100 MVA','fontname', 'Arial','fontsize', fontAxis);    
+    ylabel('MW','fontname', 'Arial','fontsize', fontAxis);    
     set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);
     
     if is_printed

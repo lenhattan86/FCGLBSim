@@ -6,9 +6,10 @@ addpath('glb_data');
 addpath('glb_func');
 addpath('glb_classes');
 %%
-% runs = [true true true true true true true true];
+runs = [true true true true true true true true];
+% runs = [true true true true false false false false];
 % runs = [false false false false true true true true];
-runs = [false false false false false false false false]; runs(6) = true;
+% runs = [false false false false false false false false]; runs(5) = true;
 %% common
 % RUNNING_MODE = RunningMode.LoadChange;
 iRun = 0;
@@ -38,20 +39,27 @@ end
 iRun = iRun+1;
 if runs(iRun)
   default_settings;
-  RUNNING_MODE = RunningMode.GenLoss;
   METHOD = Method.optimal;
   computeOptimalCosts;
 end
 
 %% Demand flexibility
 iRun = iRun+1;
+
+FLEX_ARRAY = [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0];
 if runs(iRun)
-  default_settings;
-  END_TIME = 150;
-  METHOD = Method.proposed;
-  FLEX_ARRAY = [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0];
-  %   FLEX_ARRAY = [0.1 0.5 1.0];
-  for i_FLEX_ARRAY=1:length(FLEX_ARRAY)      
+  for i_FLEX_ARRAY=1:length(FLEX_ARRAY)  
+    default_settings;
+    METHOD = Method.proposed;  
+    FLEX = FLEX_ARRAY(i_FLEX_ARRAY);
+    s_simu_glb;
+  end
+end
+
+if runs(iRun)    
+  for i_FLEX_ARRAY=1:length(FLEX_ARRAY)    
+    default_settings;
+    METHOD = Method.OLC;
     FLEX = FLEX_ARRAY(i_FLEX_ARRAY);
     s_simu_glb;
   end
@@ -59,27 +67,26 @@ end
 
 %% Delay 
 iRun = iRun+1;
-if runs(iRun)
-  default_settings;
-  END_TIME = 1000;
-  METHOD = Method.proposed;
-  FLEX = 0.5;
-%   DELAY_ARRAY = 0.01*2.^(0:9);
+if false %runs(iRun)
+  
   DELAY_ARRAY = 0.01*2.^(0:4);
-  for i_DELAY_ARRAY=1:length(DELAY_ARRAY)      
+  for i_DELAY_ARRAY=1:length(DELAY_ARRAY)
+    default_settings;
+    END_TIME = 1000;
+    METHOD = Method.proposed;
+    FLEX = 0.5;
     DELAY = DELAY_ARRAY(i_DELAY_ARRAY);
     s_simu_glb;
   end
 end
 %% Importance of frequency deviation.
 iRun = iRun+1;
-if runs(iRun)
-  default_settings;
-  END_TIME = 150;
-  METHOD = Method.proposed;
-  FLEX = 0.5;
+if false %runs(iRun)
+  
   WEIGHT_ARRAY = [0.1:0.2:1 2.^(0:3)];
-  for i_WEIGHT_ARRAY=1:length(WEIGHT_ARRAY)      
+  for i_WEIGHT_ARRAY=1:length(WEIGHT_ARRAY) 
+    default_settings;
+    METHOD = Method.proposed;
     WEIGHT = WEIGHT_ARRAY(i_WEIGHT_ARRAY);
     s_simu_glb;
   end
@@ -88,12 +95,21 @@ end
 %% Importance of global costs
 iRun = iRun+1;
 if runs(iRun)
-  default_settings;
-  END_TIME = 150;
-  METHOD = Method.proposed;
-  FLEX = 0.5;
-  GAMMA_ARRAY = [0:0.1:5];
+  
+  GAMMA_ARRAY = [0:0.01:0.2];
   for i_GAMMA_ARRAY=1:length(GAMMA_ARRAY)      
+    default_settings;
+    METHOD = Method.proposed;
+    GAMMA = GAMMA_ARRAY(i_GAMMA_ARRAY);
+    s_simu_glb;
+  end
+end
+
+if runs(iRun)  
+  GAMMA_ARRAY = [0:0.01:0.2];
+  for i_GAMMA_ARRAY=1:length(GAMMA_ARRAY) 
+    default_settings;
+    METHOD = Method.OLC;
     GAMMA = GAMMA_ARRAY(i_GAMMA_ARRAY);
     s_simu_glb;
   end
