@@ -10,8 +10,14 @@ X_LIM = 35;
 
 % folder = 'output01/';
 folder = 'output/';
+
+GAMMA = 0.08;
+DELAY = 0.01;
+FLEX = 0.4;
+WEIGHT = 75;
+extra = ['_' num2str(FLEX) '_' num2str(DELAY) '_' num2str(WEIGHT) '_' num2str(GAMMA)];
   
-optimalFile = 'GenLoss_optimal_0.5_0.01_1';
+optimalFile = ['GenLoss_optimal' extra];
   
 figIdx = 0;
 strLegends = {strOLC, strProposed, strOptimal};
@@ -21,8 +27,8 @@ colors = {colorOLC, colorProposed, colorOptimal};
 %%
 if PLOTS(1)
     dataFiles = {
-      'GenLoss_OLC_0.5_0.01_1';
-      'GenLoss_proposed_0.5_0.01_1';   
+      ['GenLoss_OLC' extra];
+      ['GenLoss_proposed' extra];   
     };
     figure; 
     figSize = figOneCol;
@@ -31,14 +37,13 @@ if PLOTS(1)
       load([folder dataFiles{iFile} '.mat']);
       d_j = controlled_load(:,length(controlled_load(1,:)));
       costs(iFile,1) = sum((c/2).* (d_j.^2)/2);  
-      costs(iFile,2) = (fcp_alpha*fcp_gamma)/2*(sum(a.*d_j')).^2;  
+      costs(iFile,2) = (fcp_gamma)/2*(sum(a.*d_j)).^2;  
     end
     
     load([folder optimalFile '.mat']);    
     costs(iFile+1,1) = sum((c/2).* (d_j.^2)/2);   
-    costs(iFile+1,2) = (fcp_alpha*fcp_gamma)/2*(sum(a.*d_j')).^2;   
+    costs(iFile+1,2) = (fcp_gamma)/2*(sum(a.*d_j)).^2;       
     
-    costs = WEIGHT*costs;    
     costs = costs*(BASE_POWER^2);
     
     hBar = bar(costs, 0.2, 'stacked');

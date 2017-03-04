@@ -27,8 +27,10 @@ strTotalCost = 'total cost (USD/sec)';
 strGlobalCost = 'interdependent';
 strLocalCost = 'independent';
 
+strPower = 'Power (MW)';
+
 %%
-fontSize=12;
+fontSize=10;
 
 fontAxis = fontSize;
 fontTitle = fontSize;
@@ -43,6 +45,8 @@ fontName = 'Arial';
 %%
 
 figOneCol = [0 0 5 3];
+figHalfCol = 1/2*figOneCol;
+figTwoThirdCol = 2/3*figOneCol;
 
 %% lines
 lineWidth = 1.5;

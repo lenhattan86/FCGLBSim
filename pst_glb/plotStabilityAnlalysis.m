@@ -31,18 +31,18 @@ figIdx = 0;
 %%
 if PLOTS(1)
     figure; 
-    figSize = figOneCol;
-    for i=1:length(dataFiles)
+    figSize = figTwoThirdCol;
+    for i=1:length(dataFiles)-1
       load([folder dataFiles{i} '.mat']);
       hPlot(i) = plot(t,load_freq(1,:)*60, lines{i}, 'linewidth', lineWidth,'Color',colors{i});  hold on;
       plot(t,load_freq*60, lines{i}, 'linewidth',lineWidth,'Color',colors{i});
       hold on;
     end
-    legend(hPlot, strLegends, 'Location','best','FontSize', fontLegend,'Orientation','horizontal');
+    legend(hPlot, strLegends, 'Location','best','FontSize', fontLegend,'Orientation','vertical');
     
     xlabel('Time (sec)', 'fontname', 'Arial','fontsize', fontAxis);
     ylabel('Frequency (Hz)','fontname', 'Arial','fontsize', fontAxis);
-    % ylim([59.90, 60.0]); 
+%     ylim([59.95, 60.0]); 
     xlim([0, X_LIM]);
     set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);
     
@@ -53,10 +53,35 @@ if PLOTS(1)
         print ('-depsc', epsFile);
     end
 end
+
+if PLOTS(1)
+    figure; 
+    figSize = figTwoThirdCol;
+    for i=3:length(dataFiles)
+      load([folder dataFiles{i} '.mat']);
+      hPlot(i) = plot(t,load_freq(1,:)*60, lines{i}, 'linewidth', lineWidth,'Color',colors{i});  hold on;
+      plot(t,load_freq*60, lines{i}, 'linewidth',lineWidth,'Color',colors{i});
+      hold on;
+    end
+%     legend(hPlot, strLegends, 'Location','best','FontSize', fontLegend,'Orientation','horizontal');
+    
+    xlabel('Time (sec)', 'fontname', 'Arial','fontsize', fontAxis);
+    ylabel('Frequency (Hz)','fontname', 'Arial','fontsize', fontAxis);
+    % ylim([59.90, 60.0]); 
+    xlim([0, X_LIM]);
+    set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);
+    
+    if is_printed
+      figIdx=figIdx +1;
+      fileNames{figIdx} = 'load_freq_2';
+      epsFile = [ LOCAL_FIG fileNames{figIdx} '.eps'];
+        print ('-depsc', epsFile);
+    end
+end
 %%
 if PLOTS(2) 
     figure; 
-    figSize = figOneCol;
+    figSize = figTwoThirdCol;
     for i=2:length(dataFiles)-1
       load([folder dataFiles{i} '.mat']);
 %       hPlot(i) = plot(t, controlled_load(1,:), lines{i}, 'linewidth', lineWidth,'Color',colors{i});
@@ -71,7 +96,7 @@ if PLOTS(2)
 %     legend(strLegends,'Location','best','FontSize', fontLegend-2,'Orientation','horizontal','Right');
     xlim([0, X_LIM]);
     xlabel('Time (sec)','fontname', 'Arial','fontsize', fontAxis);
-    ylabel('MW','fontname', 'Arial','fontsize', fontAxis);    
+    ylabel(strPower,'fontname', 'Arial','fontsize', fontAxis);    
     set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);
     
     if is_printed
@@ -84,7 +109,7 @@ end
 %%
 if PLOTS(3)
     figure; 
-    figSize = figOneCol;
+    figSize = figHalfCol;
     
     for i=1:length(dataFiles)
       load([folder dataFiles{i} '.mat']);
@@ -111,7 +136,7 @@ end
 %%
 if PLOTS(4)
     figure; 
-    figSize = figOneCol;
+    figSize = figHalfCol;
     
     for i=1:length(dataFiles)
       load([folder dataFiles{i} '.mat']);
@@ -166,7 +191,7 @@ if PLOTS(5)
       hold on;
     end    
     
-    figSize = figOneCol;
+    figSize = figHalfCol;
     
     xlabel('Time (sec)','fontname', 'Arial','fontsize', fontAxis);
     ylabel('Frequency (Hz)','fontname', 'Arial','fontsize', fontAxis);
@@ -202,7 +227,7 @@ if PLOTS(6)
       hold on;
     end    
     
-    figSize = figOneCol;
+    figSize = figHalfCol;
     
     xlabel('Time (sec)','fontname', 'Arial','fontsize', fontAxis);
     ylabel('Frequency (Hz)','fontname', 'Arial','fontsize', fontAxis);
@@ -232,7 +257,7 @@ if PLOTS(7)
       hold on;
     end    
     
-    figSize = figOneCol;
+    figSize = figHalfCol;
     
     xlabel('Time (sec)','fontname', 'Arial','fontsize', fontAxis);
     ylabel('Frequency (Hz)','fontname', 'Arial','fontsize', fontAxis);
