@@ -57,8 +57,9 @@ if METHOD==Method.proposed
           % algorithm parts   
           control_d = (ones(size(c))./c).*(freq_deviation - a*mu(k));   
           control_d=max(min(control_d,OLC_capacity(:,2)),OLC_capacity(:,1)); 
-  
-          mu(k+OLCstep) = mu(k) + fcp_lambda * (sum(a.*control_d) - mu(k)/(fcp_gamma)); 
+          
+          mu(k+OLCstep) = mu(k) + fcp_lambda * ((sum(a.*control_d)*(fcp_gamma) - mu(k))/(fcp_gamma)); %To fix problems with small gamma
+          %mu(k+OLCstep) = mu(k) + fcp_lambda * (sum(a.*control_d) - mu(k)/(fcp_gamma)); 
           lmod_sig(OLC_mod,k)= lmod_sig(OLC_mod,k) + control_d;
           controlled_load(:,k) = control_d;
         else
