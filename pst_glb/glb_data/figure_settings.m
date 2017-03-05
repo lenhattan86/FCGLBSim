@@ -29,6 +29,8 @@ strLocalCost = 'independent';
 
 strPower = 'Power (MW)';
 
+strGamma = '\gamma';
+
 %%
 fontSize=10;
 
@@ -60,8 +62,12 @@ lineNone = ':';
 barWidth = 0.7;
 
 %% colors
+%http://colorbrewer2.org/#type=sequential&scheme=BuGn&n=3
 colorProposed = [237    125    49]/255;
 colorOLC = [165    165    165]/255;
 colorNone = [68    71   196]/255;
 colorOptimal = [0    0   0]/255;
+
+colorLocal = [hex2dec('2c')    hex2dec('7f')    hex2dec('b8')]/255;
+colorGlobal = [hex2dec('7f')    hex2dec('cd')    hex2dec('bb')]/255;
 

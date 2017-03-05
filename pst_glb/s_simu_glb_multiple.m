@@ -46,10 +46,11 @@ end
 %% Demand flexibility
 iRun = iRun+1;
 
-FLEX_ARRAY = [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0];
+FLEX_ARRAY = 0.1:0.05:1.0;
 if runs(iRun)
   for i_FLEX_ARRAY=1:length(FLEX_ARRAY)  
     default_settings;
+    END_TIME = 1000;
     METHOD = Method.proposed;  
     FLEX = FLEX_ARRAY(i_FLEX_ARRAY);
     s_simu_glb;
@@ -59,6 +60,7 @@ end
 if runs(iRun)    
   for i_FLEX_ARRAY=1:length(FLEX_ARRAY)    
     default_settings;
+    END_TIME = 1000;
     METHOD = Method.OLC;
     FLEX = FLEX_ARRAY(i_FLEX_ARRAY);
     s_simu_glb;
@@ -68,7 +70,6 @@ end
 %% Delay 
 iRun = iRun+1;
 if false %runs(iRun)
-  
   DELAY_ARRAY = 0.01*2.^(0:4);
   for i_DELAY_ARRAY=1:length(DELAY_ARRAY)
     default_settings;
@@ -81,12 +82,22 @@ if false %runs(iRun)
 end
 %% Importance of frequency deviation.
 iRun = iRun+1;
-if false %runs(iRun)
+if runs(iRun)
   
-  WEIGHT_ARRAY = [0.1:0.2:1 2.^(0:3)];
+  WEIGHT_ARRAY = [5:10:100];
   for i_WEIGHT_ARRAY=1:length(WEIGHT_ARRAY) 
     default_settings;
+    END_TIME = 1000;
     METHOD = Method.proposed;
+    WEIGHT = WEIGHT_ARRAY(i_WEIGHT_ARRAY);
+    s_simu_glb;
+  end
+  
+  WEIGHT_ARRAY = [5:10:100];
+  for i_WEIGHT_ARRAY=1:length(WEIGHT_ARRAY) 
+    default_settings;
+    END_TIME = 1000;
+    METHOD = Method.OLC;
     WEIGHT = WEIGHT_ARRAY(i_WEIGHT_ARRAY);
     s_simu_glb;
   end
@@ -96,9 +107,10 @@ end
 iRun = iRun+1;
 if runs(iRun)
   
-  GAMMA_ARRAY = [0:0.01:0.2];
+  GAMMA_ARRAY = [0:0.02:0.4];
   for i_GAMMA_ARRAY=1:length(GAMMA_ARRAY)      
     default_settings;
+    END_TIME = 1000;
     METHOD = Method.proposed;
     GAMMA = GAMMA_ARRAY(i_GAMMA_ARRAY);
     s_simu_glb;
@@ -106,9 +118,10 @@ if runs(iRun)
 end
 
 if runs(iRun)  
-  GAMMA_ARRAY = [0:0.01:0.2];
+  GAMMA_ARRAY = [0:0.02:0.4];
   for i_GAMMA_ARRAY=1:length(GAMMA_ARRAY) 
     default_settings;
+    END_TIME = 1000;
     METHOD = Method.OLC;
     GAMMA = GAMMA_ARRAY(i_GAMMA_ARRAY);
     s_simu_glb;

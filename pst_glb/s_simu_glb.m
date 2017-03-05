@@ -1176,7 +1176,8 @@ clear z z1 z_dpw z_pss z_tg zdc zdcl ze zig zm
 checkOptimality;
 matFile = [ strScenario '.mat'];
 strScenario
-save(['output/' matFile]);
+temp = 'output_new/'; mkdir(temp);
+save([temp matFile]);
 if(IS_PLOT)
   plotFrequencyTime(matFile, true);
 end
