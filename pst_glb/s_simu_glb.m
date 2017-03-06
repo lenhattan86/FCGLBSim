@@ -1,4 +1,4 @@
-SINGLE_RUN = false;
+SINGLE_RUN = true;
 %%
 if ~exist('IS_MULTIPLE_RUN','var') || SINGLE_RUN
     clear all
@@ -1173,12 +1173,12 @@ clear z z1 z_dpw z_pss z_tg zdc zdcl ze zig zm
 
 
 %% plot results - by Tan N. LE
-checkOptimality;
+%checkOptimality;
 matFile = [ strScenario '.mat'];
 strScenario
 temp = 'output_new/'; mkdir(temp);
 save([temp matFile]);
 if(IS_PLOT)
-  plotFrequencyTime(matFile, true);
+  %plotFrequencyTime(matFile, true);
 end
 strScenario
