@@ -11,7 +11,7 @@ X_LIM = 35;
 
 % folder = 'output01/';
 folder = 'output/';
-GAMMA = 0.08;
+GAMMA = 0.16;
 DELAY = 0.01;
 FLEX = 0.4;
 WEIGHT = 75;
@@ -87,7 +87,7 @@ if PLOTS(2)
 %       hPlot(i) = plot(t, controlled_load(1,:), lines{i}, 'linewidth', lineWidth,'Color',colors{i});
 %       hold on;
 %       plot(t, controlled_load*NEW_ENG_BASE/BASE_POWER, lines{i}, 'linewidth',lineWidth,'Color',colors{i});
-      plot(t, controlled_load*NEW_ENG_BASE/BASE_POWER, '-.','linewidth',lineWidth);
+      plot(t, controlled_load*NEW_ENG_BASE, '-.','linewidth',lineWidth);
       hold on;
     end
     a = 1:10 ;

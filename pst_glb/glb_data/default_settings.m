@@ -5,4 +5,4 @@ DELAY = 0.01; % secs
 FLEX = 0.4;
 END_TIME = 150;
 WEIGHT = 75;
-GAMMA = 0.08;
+GAMMA = 0.16;

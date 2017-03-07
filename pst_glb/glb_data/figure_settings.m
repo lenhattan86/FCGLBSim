@@ -2,8 +2,8 @@
 
 OUTPUT_FOLDER = 'output/';
 LOCAL_FIG = 'figs/';
-fig_path = 'C:\Users\NhatTan\Dropbox\Papers\FCGLB\FCGLB\cdc_17_paper\images\';
-
+%fig_path = 'C:\Users\NhatTan\Dropbox\Papers\FCGLB\FCGLB\cdc_17_paper\images\';
+fig_path = 'figs/';
 PS_CMD_FORMAT='ps2pdf -dEmbedAllFonts#true -dSubsetFonts#true -dEPSCrop#false -dPDFSETTINGS#/prepress %s %s';
 %% String
 strProposed = 'proposed';

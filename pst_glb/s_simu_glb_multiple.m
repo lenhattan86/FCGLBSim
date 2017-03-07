@@ -6,10 +6,10 @@ addpath('glb_data');
 addpath('glb_func');
 addpath('glb_classes');
 %%
-runs = [true true true true true true true true];
+ runs = [true true true true true true true true];
 % runs = [true true true true false false false false];
 % runs = [false false false false true true true true];
-% runs = [false false false false false false false false]; runs(5) = true;
+%runs = [false false false false false false false false]; runs(4) = true;
 %% common
 % RUNNING_MODE = RunningMode.LoadChange;
 iRun = 0;
@@ -107,10 +107,10 @@ end
 iRun = iRun+1;
 if runs(iRun)
   
-  GAMMA_ARRAY = [0:0.02:0.4];
+  GAMMA_ARRAY = [0.005 0.015:0.015:0.3];
   for i_GAMMA_ARRAY=1:length(GAMMA_ARRAY)      
     default_settings;
-    END_TIME = 1000;
+    END_TIME = 100;
     METHOD = Method.proposed;
     GAMMA = GAMMA_ARRAY(i_GAMMA_ARRAY);
     s_simu_glb;
@@ -118,7 +118,7 @@ if runs(iRun)
 end
 
 if runs(iRun)  
-  GAMMA_ARRAY = [0:0.02:0.4];
+  GAMMA_ARRAY = [0.005 0.015:0.015:0.3];
   for i_GAMMA_ARRAY=1:length(GAMMA_ARRAY) 
     default_settings;
     END_TIME = 1000;

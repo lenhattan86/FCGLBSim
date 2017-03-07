@@ -11,7 +11,7 @@ X_LIM = 35;
 % folder = 'output01/';
 folder = 'output/';
 
-GAMMA = 0.08;
+GAMMA = 0.16;
 DELAY = 0.01;
 FLEX = 0.4;
 WEIGHT = 75;
@@ -37,15 +37,15 @@ if PLOTS(1)
     for iFile=1:length(dataFiles)
       load([folder dataFiles{iFile} '.mat']);
       d_j = controlled_load(:,length(controlled_load(1,:)));
-      costs(iFile,1) = sum((c/2).* (d_j.^2)/2);  
-      costs(iFile,2) = (fcp_gamma)/2*(sum(a.*d_j)).^2;  
+      costs(iFile,1) = WEIGHT*sum((c/2).* (d_j.^2)/2);  
+      costs(iFile,2) = WEIGHT*(fcp_gamma)/2*(sum(a.*d_j)).^2;  
     end
     
     load([folder optimalFile '.mat']);    
-    costs(iFile+1,1) = sum((c/2).* (d_j.^2)/2);   
-    costs(iFile+1,2) = (fcp_gamma)/2*(sum(a.*d_j)).^2;       
+    costs(iFile+1,1) = WEIGHT*sum((c/2).* (d_j.^2)/2);   
+    costs(iFile+1,2) = WEIGHT*(fcp_gamma)/2*(sum(a.*d_j)).^2;       
     
-    costs = costs*(NEW_ENG_BASE^2);
+    %costs = costs*(NEW_ENG_BASE^2);
     
     hBar = bar(costs, 0.2, 'stacked');
     set(gca,'XTickLabel', strLegends,'FontSize',fontAxis);
@@ -77,11 +77,11 @@ if PLOTS(2)
     for iFile=1:length(dataFiles)
       load([folder dataFiles{iFile} '.mat']);
       d_j = controlled_load(:,length(controlled_load(1,:)));
-      COSTS(iFile,:) = (c/2).* (d_j.^2)/2;  
+      COSTS(iFile,:) = WEIGHT.*(c/2).* (d_j.^2)/2;  
 %       COSTS(iFile,2) = (fcp_gamma)/2*(sum(a.*d_j)).^2;  
     end
     
-    COSTS = COSTS*(NEW_ENG_BASE^2);
+    %COSTS = COSTS*(NEW_ENG_BASE^2);
     
     hBar = bar(COSTS', 0.8, 'grouped');
 %     set(gca,'XTickLabel', strLegends,'FontSize',fontAxis);

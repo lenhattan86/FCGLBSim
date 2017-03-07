@@ -1,4 +1,4 @@
-SINGLE_RUN = true;
+SINGLE_RUN = false;
 %%
 if ~exist('IS_MULTIPLE_RUN','var') || SINGLE_RUN
     clear all
@@ -36,7 +36,8 @@ if useLocalParameters
   FLEX = 0.4;
   IS_PLOT = true;
   WEIGHT = 75; %$/MW-Hz
-  GAMMA = 0.08; %$/MW^2
+  GAMMA = 0.16; %$/MW^2
+  %GAMMA = 0.08; %$/MW^2
 else
   IS_PLOT = false;
 end
@@ -45,7 +46,7 @@ strScenario = [char(RUNNING_MODE) '_' char(METHOD) '_' num2str(FLEX) '_' num2str
 fprintf('[INFO] Running %s \n', strScenario)
 
 common_setttings
-fcp_lambda  = 0.001; % 0.001
+fcp_lambda  = 0.002; % 0.001
 additional_settings
 
 %% 
@@ -1176,9 +1177,10 @@ clear z z1 z_dpw z_pss z_tg zdc zdcl ze zig zm
 %checkOptimality;
 matFile = [ strScenario '.mat'];
 strScenario
-temp = 'output_new/'; mkdir(temp);
-save([temp matFile]);
+temp = 'output/'; mkdir(temp);
+matFile = [temp matFile];
+save(matFile);
 if(IS_PLOT)
-  %plotFrequencyTime(matFile, true);
+  plotFrequencyTime(matFile, true);
 end
 strScenario
