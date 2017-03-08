@@ -32,7 +32,7 @@ figIdx = 0;
 if PLOTS(1)
     figure; 
     figSize = figTwoThirdCol;
-    for i=1:length(dataFiles)-1
+    for i=1:length(dataFiles)%-1
       load([folder dataFiles{i} '.mat']);
       hPlot(i) = plot(t,load_freq(1,:)*60, lines{i}, 'linewidth', lineWidth,'Color',colors{i});  hold on;
       plot(t,load_freq*60, lines{i}, 'linewidth',lineWidth,'Color',colors{i});
@@ -42,7 +42,7 @@ if PLOTS(1)
     
     xlabel('Time (sec)', 'fontname', 'Arial','fontsize', fontAxis);
     ylabel('Frequency (Hz)','fontname', 'Arial','fontsize', fontAxis);
-%     ylim([59.95, 60.0]); 
+    ylim([59.9, 60.0]); 
     xlim([0, X_LIM]);
     set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);
     
@@ -58,10 +58,13 @@ if PLOTS(1)
     figure; 
     figSize = figTwoThirdCol;
     for i=3:length(dataFiles)
-      load([folder dataFiles{i} '.mat']);
-      hPlot(i) = plot(t,load_freq(1,:)*60, lines{i}, 'linewidth', lineWidth,'Color',colors{i});  hold on;
-      plot(t,load_freq*60, lines{i}, 'linewidth',lineWidth,'Color',colors{i});
-      hold on;
+      fileToLoad = [folder dataFiles{i} '.mat']
+      if(exist(fileToLoad,'file'))
+          load(fileToLoad);
+          hPlot(i) = plot(t,load_freq(1,:)*60, lines{i}, 'linewidth', lineWidth,'Color',colors{i});  hold on;
+          plot(t,load_freq*60, lines{i}, 'linewidth',lineWidth,'Color',colors{i});
+          hold on;
+      end
     end
 %     legend(hPlot, strLegends, 'Location','best','FontSize', fontLegend,'Orientation','horizontal');
     

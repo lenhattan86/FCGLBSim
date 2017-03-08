@@ -1,9 +1,9 @@
 function [ converge_time, converged_freq, costs ] = obtainResult(folder, FILES, delta_frequency)
 %OBTAINRESULT Summary of this function goes here
 %   Detailed explanation goes here
-converge_time = zeros(1,length(FILES));
-converged_freq = zeros(1,length(FILES));
-costs = zeros(1,length(FILES));
+converge_time = -100*ones(1,length(FILES));
+converged_freq = -100*ones(1,length(FILES));
+costs = -100*ones(1,length(FILES));
 for iFile=1:length(FILES)
      fileToLoad = [folder FILES{iFile} '.mat'];
       if exist(fileToLoad,'file')  
@@ -28,8 +28,8 @@ for iFile=1:length(FILES)
         converged_freq(iFile) = convergedVal*60;  
         
         d_j = controlled_load(:,length(controlled_load(1,:)));
-        costs(iFile) = (fcp_gamma)/2*(sum(a.*d_j)).^2 + sum((c/2).* (d_j.^2)/2);
-        costs(iFile) = costs(iFile)*(NEW_ENG_BASE^2);
+        costs(iFile) = WEIGHT*((fcp_gamma)/2*(sum(a.*d_j)).^2 + sum((c/2).* (d_j.^2)/2));
+        %costs(iFile) = costs(iFile)*(NEW_ENG_BASE^2)*WEIGHT;
       end
 end
  end
