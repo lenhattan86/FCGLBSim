@@ -14,7 +14,7 @@ RUNNING_MODE  = RunningMode.Motivation
 % common_setttings
 
 %%
-strScenario = [char(RUNNING_MODE) '_' char(METHOD) '_' num2str(FLEX) '_'  num2str(WEIGHT)];% 
+strScenario = [char(RUNNING_MODE) '_' char(METHOD)];% 
 
 GAMMA_ARRAY = 0:0.1:10;
 N = 2;
