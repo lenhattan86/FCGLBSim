@@ -82,8 +82,8 @@ if PLOTS(2)
   plot(GAMMA_ARRAY, Y1(1,:), lines{1},'linewidth',lineWidth,'Color', colors{1});
   hold on;
   plot(GAMMA_ARRAY, Y2(1,:), lines{2},'linewidth',lineWidth,'Color', colors{2});
-  ylim([0 Y_MAX]);
-  xlim([0 7]);
+  ylim([0 150]);
+  xlim([0 5]);
   legend(strLegends,'Location','northwest','FontSize', fontLegend,'Orientation','vertical');
   ylabel(strCost,'fontname', fontName,'fontsize', fontAxis);    
   xlabel('\gamma','fontname', fontName,'fontsize', fontAxis);
@@ -101,8 +101,8 @@ if PLOTS(2)
   plot(GAMMA_ARRAY, Y1(2,:), lines{1},'linewidth',lineWidth,'Color', colors{1});
   hold on;
   plot(GAMMA_ARRAY, Y2(2,:), lines{2},'linewidth',lineWidth,'Color', colors{2});
-  ylim([0 Y_MAX]);
-  xlim([0 7]);
+  ylim([0 150]);
+  xlim([0 5]);
   legend(strLegends,'Location','northwest','FontSize', fontLegend,'Orientation','vertical');
   ylabel(strCost,'fontname', fontName,'fontsize', fontAxis);    
   xlabel('\gamma','fontname', fontName,'fontsize', fontAxis);

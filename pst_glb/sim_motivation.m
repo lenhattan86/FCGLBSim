@@ -23,9 +23,9 @@ gamma = 0;
 DC_DEMAND = 20;
 DC_CAPACITY = 30;
 fcp_alpha = 1;
-a = [0.75 0.3];
+a = [0.9 0.5];
 c = [1 1];
-b = -21; % b = sum(a) * DC_DEMAND.
+b = -28; % b = sum(a) * DC_DEMAND.
 OLC_capacity = [-10 10];
 disturbance = 10;
 
