@@ -12,15 +12,15 @@ w = 1- mean(load_freq(:,length(load_freq(1,:))));
 N =  length(OLC_bus);      
 % use CVX to compute control_d.
 warning off;
-cvx_begin quiet
+cvx_begin %quiet
   variables delta_j(N)        
   minimize( (fcp_gamma)/2* ((sum(a.*delta_j))^2) + ...
         sum((c/2).*(delta_j.^2)) + sumOfD_j/2*w^2 ...
         )        
   subject to
-      delta_j >= OLC_capacity(:,1);
-      delta_j <= OLC_capacity(:,2);
-      sum(delta_j) + sumOfD_j*w == sum(disturbance_size);
+      delta_j >= ones(size(delta_j))*OLC_capacity(:,1);
+      delta_j <= ones(size(delta_j))*OLC_capacity(:,2);
+      sum(delta_j) + sumOfD_j*w == -sum(disturbance_size);
 cvx_end
 control_d  = delta_j;      
 if (~(or(strcmp(cvx_status,'Solved'),strcmp(cvx_status,'Inaccurate/Solved'))))        

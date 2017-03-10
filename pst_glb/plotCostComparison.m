@@ -40,10 +40,12 @@ if PLOTS(1)
       costs(iFile,1) = WEIGHT*sum((c/2).* (d_j.^2)/2);  
       costs(iFile,2) = WEIGHT*(fcp_gamma)/2*(sum(a.*d_j)).^2;  
     end
-    
-    load([folder optimalFile '.mat']);    
+    %sum(disturbance_size)
+    load([folder optimalFile '.mat']);
+    d_j = controlled_load(:,length(controlled_load(1,:)))
     costs(iFile+1,1) = WEIGHT*sum((c/2).* (d_j.^2)/2);   
-    costs(iFile+1,2) = WEIGHT*(fcp_gamma)/2*(sum(a.*d_j)).^2;       
+    costs(iFile+1,2) = WEIGHT*(fcp_gamma)/2*(sum(a.*d_j)).^2;   
+    sum(disturbance_size)
     
     %costs = costs*(NEW_ENG_BASE^2);
     

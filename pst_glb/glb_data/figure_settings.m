@@ -10,9 +10,9 @@ strProposed = 'proposed';
 strOLC = 'OLC';
 strOptimal = 'Optimal';
 strSubOptimal = 'suboptimal';
-strFCOptimal = 'FC optimal';
+strFCOptimal = 'opt';
 
-strFCLocal = 'FC independent';
+strFCLocal = 'ind';
 
 strNone = 'none';
 

@@ -8,8 +8,8 @@ global RUNNING_MODE METHOD INCIDENT_START DELAY FLEX END_TIME WEIGHT
 FLEX = 0.5;
 WEIGHT = 1;
 END_TIME = 35;
-METHOD = Method.optimal;
-% METHOD = Method.OLC;
+%METHOD = Method.optimal;
+ METHOD = Method.OLC;
 RUNNING_MODE  = RunningMode.Motivation
 % common_setttings
 
