@@ -7,9 +7,9 @@ addpath('glb_func');
 addpath('glb_classes');
 %%
 % runs = [true true true true true true true true];
-% runs = [true true true true false false false false];
+ runs = [true true true true false false false false];
 % runs = [false false false false true true true true];
-runs = [false false false false false false false false]; runs(4) = true;
+%runs = [false false false false false false false false]; runs(4) = true;
 %% common
 % RUNNING_MODE = RunningMode.LoadChange;
 iRun = 0;

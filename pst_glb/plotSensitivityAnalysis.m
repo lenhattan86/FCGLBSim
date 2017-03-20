@@ -122,21 +122,21 @@ if PLOTS(1)
     end   
     
     % cost
-    figure      
-    for iFig=1:2
-      plot(FLEXES(range),costs(iFig,range),lines{iFig}, 'linewidth', lineWidth,'Color',colors{iFig});
-      hold on;
-    end
+    figure  
+    plot(FLEXES(range),(costs(1,range)-costs(2,range))./costs(1,range)*100,lines{2}, 'linewidth', lineWidth,'Color',colors{2});
+    %for iFig=1:2
+    %  plot(FLEXES(range),costs(iFig,range),lines{iFig}, 'linewidth', lineWidth,'Color',colors{iFig});
+    %  hold on;
+    %end
     xlim([FLEXES(1) max(FLEXES(range))]);
-    ylim([0 150]);
+    ylim([0 40]);
 %     bar(FLEXES(range), costs(range), barWidth);
 %     xlim([min(FLEXES(range))-5, max(FLEXES(range))+5]);
 %     xlim([-5, max(FLEXES(range))+5]); 
     xlabel('flexibility (%)','fontname', fontName,'fontsize',fontAxis);
-    ylabel(strTotalCost,'fontname', fontName,'fontsize',fontAxis);    
-    legend( strLegends, 'Location','best','FontSize', fontLegend,'Orientation','vertical');
-    set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);    
-    
+    ylabel('cost savings (%)','fontname', fontName,'fontsize',fontAxis);    
+    %legend( strLegends, 'Location','best','FontSize', fontLegend,'Orientation','vertical');
+    set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);   
     
     if is_printed
       figIdx=figIdx +1;
@@ -341,7 +341,7 @@ end
 if PLOTS(4)    
     FILES = {%'GenLoss_OLC_0.4_0.01_75_0.005'...
             %,'GenLoss_OLC_0.4_0.01_75_0.015'...
-            ,'GenLoss_OLC_0.4_0.01_75_0.03'...
+            'GenLoss_OLC_0.4_0.01_75_0.03'...
             ,'GenLoss_OLC_0.4_0.01_75_0.045'...
             ,'GenLoss_OLC_0.4_0.01_75_0.06'...
             ,'GenLoss_OLC_0.4_0.01_75_0.075'...
@@ -364,7 +364,7 @@ if PLOTS(4)
           
      FILES_2 = {%'GenLoss_proposed_0.4_0.01_75_0.005'...
             %,'GenLoss_proposed_0.4_0.01_75_0.015'...
-            ,'GenLoss_proposed_0.4_0.01_75_0.03'...
+            'GenLoss_proposed_0.4_0.01_75_0.03'...
             ,'GenLoss_proposed_0.4_0.01_75_0.045'...
             ,'GenLoss_proposed_0.4_0.01_75_0.06'...
             ,'GenLoss_proposed_0.4_0.01_75_0.075'...
@@ -435,16 +435,18 @@ if PLOTS(4)
     end   
     
     % cost
-    figure      
-    for iFig=1:2
-      plot(GAMMA_ARRAY(range),costs(iFig,range),lines{iFig}, 'linewidth', lineWidth,'Color',colors{iFig});
-      hold on;
-    end
+    figure 
+    plot(GAMMA_ARRAY(range),(costs(1,range)-costs(2,range))./costs(1,range)*100,lines{2}, 'linewidth', lineWidth,'Color',colors{2});
+    %for iFig=1:2
+    %  plot(GAMMA_ARRAY(range),costs(iFig,range),lines{iFig}, 'linewidth', lineWidth,'Color',colors{iFig});
+    %  hold on;
+    %end
     xlim([GAMMA_ARRAY(1) max(GAMMA_ARRAY(range))]);
+    ylim([0 40]);
     xlabel(strGamma,'fontname', fontName,'fontsize',fontAxis);
-    ylabel(strTotalCost,'fontname', fontName,'fontsize',fontAxis);    
-    legend( strLegends, 'Location','best','FontSize', fontLegend,'Orientation','vertical');
-    set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);      
+    ylabel('cost savings (%)','fontname', fontName,'fontsize',fontAxis);    
+    %legend( strLegends, 'Location','best','FontSize', fontLegend,'Orientation','vertical');
+    set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);
     
     if is_printed
       figIdx=figIdx +1;

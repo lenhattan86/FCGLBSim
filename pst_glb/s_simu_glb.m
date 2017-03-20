@@ -23,7 +23,7 @@ addpath('glb_classes');
 % mode
 
 if useLocalParameters
-  END_TIME = 35;
+  END_TIME = 65;
 %   RUNNING_MODE = RunningMode.LoadChange;
   RUNNING_MODE = RunningMode.GenLoss;
 %   RUNNING_MODE = RunningMode.None;
@@ -46,7 +46,7 @@ strScenario = [char(RUNNING_MODE) '_' char(METHOD) '_' num2str(FLEX) '_' num2str
 fprintf('[INFO] Running %s \n', strScenario)
 
 common_setttings
-fcp_lambda  = 0.002; % 0.001
+fcp_lambda  = 0.001; % 0.001
 additional_settings
 
 %% 
