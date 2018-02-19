@@ -6,7 +6,7 @@ function f = ml_sig(t,k)
 % modulates the active load at a bus
 
 global lmod_sig n_lmod
-global bus_v  OLC_gain  OLC_mod OLCtime disturbance_size disturbance_mod controlled_load OLC_bus  
+global bus_v  OLC_gain  OLC_mod OLCtime disturbance_size disturbance_mod controlled_load OLC_bus
 global OLC_capacity
 global GLB_bus
 global METHOD RUNNING_MODE INCIDENT_START
@@ -56,13 +56,15 @@ if METHOD==Method.proposed
 %           end
           % algorithm parts   
           control_d = (ones(size(c))./c).*(freq_deviation - a*mu(k));   
-          control_d=max(min(control_d,OLC_capacity(:,2)),OLC_capacity(:,1)); 
+          control_d = max(min(control_d,OLC_capacity(:,2)),OLC_capacity(:,1)); 
           
           mu(k+OLCstep) = mu(k) + fcp_lambda * ((sum(a.*control_d)*(fcp_gamma) - mu(k))./(fcp_gamma)); %To fix problems with small gamma
           %mu(k+OLCstep) = mu(k) + fcp_lambda * (sum(a.*control_d) - mu(k)/(fcp_gamma)); 
-          lmod_sig(OLC_mod,k)= lmod_sig(OLC_mod,k) + control_d;
+          lmod_sig(OLC_mod,k) = lmod_sig(OLC_mod,k) + control_d;
           controlled_load(:,k) = control_d;
         else
+          control_d = controlled_load(:,k-1);
+          lmod_sig(OLC_mod,k) = lmod_sig(OLC_mod,k) + control_d;
           controlled_load(:,k) = control_d;
         end
       else
@@ -168,7 +170,7 @@ elseif METHOD == Method.OLC
       end
 
       %if k>=OLCstep+1 && mod(k-1,OLCstep)==0
-      if k>=OLCstep+1
+      if k >= OLCstep+1
         temp_delta_theta=angle(bus_v(OLC_bus,k))-angle(bus_v(OLC_bus,k-OLCstep));
         freq_deviation = temp_delta_theta.*(abs(temp_delta_theta)<=1.9*pi)+...
             (temp_delta_theta-2*pi).*(temp_delta_theta>1.9*pi)+...
@@ -178,8 +180,11 @@ elseif METHOD == Method.OLC
         load_freq(:, k) = freq_deviation+1; % convert from rad to normalized Hz (1 = 60hz)  
         control_d=max(min(control_d,OLC_capacity(:,2)),OLC_capacity(:,1));    %frequency-pu
         controlled_load(:,k) = control_d;
-      end      
-      lmod_sig(OLC_mod,k)= lmod_sig(OLC_mod,k)+ control_d;
+      else
+        control_d = controlled_load(:,k-1);
+        lmod_sig(OLC_mod,k)= lmod_sig(OLC_mod,k) + control_d;
+        controlled_load(:,k) = control_d;
+      end
    end
 elseif METHOD == Method.NONE
     f=0; %dummy variable

@@ -1,5 +1,7 @@
 global RUNNING_MODE METHOD INCIDENT_START
 global gamma a c Phi mu fcp_lambda fcp_alpha sumOfD_j disturbance_gen_mod mac_scale fcp_beta fcp_gamma NEW_ENG_BASE
+global control_d
+
 
 SYS_FREQ=60;
 DEBUG = false;
@@ -204,7 +206,7 @@ WEIGHT = WEIGHT*NEW_ENG_BASE/BASE_POWER; %scale from 14 GW to total power of sim
 WEIGHT = WEIGHT*BASE_POWER*SYS_FREQ; %Scaling down to pu for power and frequency
 GAMMA = GAMMA/WEIGHT; %cost in terms of freq dev.
 
-fcp_lambda  = 0.001; % step size
+fcp_lambda  = 0.001; % step size CDC: 0.001
 fcp_gamma  = GAMMA;
 fcp_beta  = WEIGHT;
 mu = zeros(1,1);
@@ -231,6 +233,8 @@ a = [ 1/1.1  1/1.5  1/1.7  1/1.8  1/1.9  1/1.95  1/1.95  1/2 1/2  1/2.1]';
 % scale up/down the costs
 %a = a/fcp_beta;
 c = c/fcp_beta; %cost in terms of freq dev
+
+%control_d = zeros(length(OLC_bus),1);
 
 %%
 if RUNNING_MODE == RunningMode.GenLoss && METHOD ~= Method.optimal

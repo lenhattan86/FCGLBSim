@@ -1,4 +1,4 @@
-SINGLE_RUN = false;
+SINGLE_RUN = true;
 %%
 if ~exist('IS_MULTIPLE_RUN','var') || SINGLE_RUN
     clear all
@@ -23,16 +23,16 @@ addpath('glb_classes');
 % mode
 
 if useLocalParameters
-  END_TIME = 65;
+  END_TIME = 65; %CDC: 65
 %   RUNNING_MODE = RunningMode.LoadChange;
   RUNNING_MODE = RunningMode.GenLoss;
 %   RUNNING_MODE = RunningMode.None;
-  METHOD = Method.proposed;
-%   METHOD = Method.OLC;
+%  METHOD = Method.proposed;
+   METHOD = Method.OLC;
 %   METHOD = Method.NONE;
   INCIDENT_START = 5; % seconds
-%   DELAY = 0.01; % 1 secs
-  DELAY = 0.01;  
+%   DELAY = 0.01; % 10ms secs
+  DELAY = 0.1;  
   FLEX = 0.4;
   IS_PLOT = true;
   WEIGHT = 75; %$/MW-Hz
