@@ -1,5 +1,5 @@
 clear global; clear; clc; close all; 
-global RUNNING_MODE METHOD INCIDENT_START DELAY FLEX END_TIME WEIGHT
+global RUNNING_MODE METHOD INCIDENT_START DELAY FLEX END_TIME WEIGHT TIME_STEP
 %%
 IS_MULTIPLE_RUN = true;
 addpath('glb_data');
@@ -7,7 +7,7 @@ addpath('glb_func');
 addpath('glb_classes');
 %%
 % runs = [true true true true true true true true];
- runs = [true true true true false false false false];
+ runs = [false false false false false false false false false];
 % runs = [false false false false true true true true];
 %runs = [false false false false false false false false]; runs(4) = true;
 %% common
@@ -70,14 +70,30 @@ end
 
 %% Delay 
 iRun = iRun+1;
-if false %runs(iRun)
+if true %runs(iRun)
   DELAY_ARRAY = 0.01*2.^(0:4);
   for i_DELAY_ARRAY=1:length(DELAY_ARRAY)
     default_settings;
     END_TIME = 1000;
     METHOD = Method.proposed;
-    FLEX = 0.5;
-    DELAY = DELAY_ARRAY(i_DELAY_ARRAY);
+    FLEX = 0.4;
+    TIME_STEP = DELAY_ARRAY(i_DELAY_ARRAY);
+     DELAY = DELAY_ARRAY(i_DELAY_ARRAY);
+    s_simu_glb;
+  end
+end
+
+%% TIME STEP 
+iRun = iRun+1;
+if true %runs(iRun)
+  TIME_STEP_ARRAY = 0.01*2.^(0:4);
+  for i_TIME_STEP_ARRAY=1:length(TIME_STEP_ARRAY)
+    default_settings;
+    END_TIME = 1000;
+    METHOD = Method.proposed;
+    FLEX = 0.4;
+    DELAY = 0.0;
+    TIME_STEP = TIME_STEP_ARRAY(TIME_STEP_ARRAY);
     s_simu_glb;
   end
 end

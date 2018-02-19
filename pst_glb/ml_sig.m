@@ -6,7 +6,7 @@ function f = ml_sig(t,k)
 % modulates the active load at a bus
 
 global lmod_sig n_lmod
-global bus_v  OLC_gain  OLC_mod OLCtime disturbance_size disturbance_mod controlled_load OLC_bus
+global bus_v  OLC_gain  OLC_mod OLCtime disturbance_size disturbance_mod controlled_load OLC_bus DELAY
 global OLC_capacity
 global GLB_bus
 global METHOD RUNNING_MODE INCIDENT_START
@@ -49,6 +49,7 @@ if METHOD==Method.proposed
         load_freq(:, k) = 1;        
       end
       
+      delay_step = DELAY/timestep;
       if k>1 
         if mod(k, OLCstep) == 0
 %           if mod(k, 1000) == 0
@@ -59,14 +60,17 @@ if METHOD==Method.proposed
           control_d = max(min(control_d,OLC_capacity(:,2)),OLC_capacity(:,1)); 
           
           mu(k+OLCstep) = mu(k) + fcp_lambda * ((sum(a.*control_d)*(fcp_gamma) - mu(k))./(fcp_gamma)); %To fix problems with small gamma
-          %mu(k+OLCstep) = mu(k) + fcp_lambda * (sum(a.*control_d) - mu(k)/(fcp_gamma)); 
-          lmod_sig(OLC_mod,k) = lmod_sig(OLC_mod,k) + control_d;
+          %mu(k+OLCstep) = mu(k) + fcp_lambda * (sum(a.*control_d) - mu(k)/(fcp_gamma));           
           controlled_load(:,k) = control_d;
+%           lmod_sig(OLC_mod,k) = lmod_sig(OLC_mod,k) + controlled_load(:,k);
         else
           control_d = controlled_load(:,k-1);
-          lmod_sig(OLC_mod,k) = lmod_sig(OLC_mod,k) + control_d;
           controlled_load(:,k) = control_d;
+%           lmod_sig(OLC_mod,k) = lmod_sig(OLC_mod,k) + control_d;     
         end
+        if k>delay_step
+          lmod_sig(OLC_mod,k) = lmod_sig(OLC_mod,k) + controlled_load(:,k-delay_step);
+        end 
       else
         mu(k+1) = -9999;
       end    
@@ -126,7 +130,7 @@ elseif METHOD == Method.offline
    if n_lmod>0
       timestep=0.01;
       OLCstep = OLCtime/timestep;
-      %OLCstep=1;     %step used for discrete time control 
+      %OLCstlmod_sigep=1;     %step used for discrete time control 
       lmod_sig(:,k)=0;
       
       if t>INCIDENT_START
@@ -136,7 +140,7 @@ elseif METHOD == Method.offline
       end
       
       if k>=OLCstep+1
-        temp_delta_theta=angle(bus_v(OLC_bus,k))-angle(bus_v(OLC_bus,k-OLCstep));
+        temp_delta_theta=angle(bus_v(OLC_bus,k))-angle(bus_v(OLC_bus,k-1));
         freq_deviation = temp_delta_theta.*(abs(temp_delta_theta)<=1.9*pi)+...
             (temp_delta_theta-2*pi).*(temp_delta_theta>1.9*pi)+...
             (temp_delta_theta+2*pi).*(temp_delta_theta<-1.9*pi);
@@ -156,13 +160,14 @@ elseif METHOD == Method.offline
         lmod_sig(OLC_mod,k)= lmod_sig(OLC_mod,k) + control_d;
         controlled_load(:,k) = control_d;
       end      
-
+lmod_sig
    end
 elseif METHOD == Method.OLC
-   f=0; %dummy variable   
+    f=0; %dummy variable   
    if n_lmod>0
       timestep=0.01;
       OLCstep = OLCtime/timestep;
+      delay_step = DELAY/timestep;
       %OLCstep=1;     %step used for discrete time control 
       lmod_sig(:,k)=0;
       if t>INCIDENT_START+timestep
@@ -170,21 +175,27 @@ elseif METHOD == Method.OLC
       end
 
       %if k>=OLCstep+1 && mod(k-1,OLCstep)==0
-      if k >= OLCstep+1
-        temp_delta_theta=angle(bus_v(OLC_bus,k))-angle(bus_v(OLC_bus,k-OLCstep));
+      if k >1
+        temp_delta_theta=angle(bus_v(OLC_bus,k))-angle(bus_v(OLC_bus,k-1));
         freq_deviation = temp_delta_theta.*(abs(temp_delta_theta)<=1.9*pi)+...
             (temp_delta_theta-2*pi).*(temp_delta_theta>1.9*pi)+...
-            (temp_delta_theta+2*pi).*(temp_delta_theta<-1.9*pi);
-        freq_deviation = freq_deviation/OLCtime/(120*pi);
-        control_d = (ones(size(c))./c).*(freq_deviation);
-        load_freq(:, k) = freq_deviation+1; % convert from rad to normalized Hz (1 = 60hz)  
-        control_d=max(min(control_d,OLC_capacity(:,2)),OLC_capacity(:,1));    %frequency-pu
-        controlled_load(:,k) = control_d;
-      else
-        control_d = controlled_load(:,k-1);
-        lmod_sig(OLC_mod,k)= lmod_sig(OLC_mod,k) + control_d;
-        controlled_load(:,k) = control_d;
-      end
+            (temp_delta_theta+2*pi).*(temp_delta_theta<-1.9*pi);          
+        freq_deviation = freq_deviation/timestep/(120*pi);        
+        load_freq(:, k) = freq_deviation+1; % convert from rad to normalized Hz (1 = 60hz) 
+        
+        if mod(k, OLCstep) == 0          
+          control_d = (ones(size(c))./c).*(freq_deviation);                   
+          control_d=max(min(control_d,OLC_capacity(:,2)),OLC_capacity(:,1));    %frequency-pu                
+          controlled_load(:,k) = control_d;
+        else
+          control_d=controlled_load(:,k-1);    %frequency-pu                
+          controlled_load(:,k) = control_d;
+        end
+        if k>delay_step
+          lmod_sig(OLC_mod,k) = lmod_sig(OLC_mod,k) + controlled_load(:,k-delay_step);
+        end 
+      end      
+       
    end
 elseif METHOD == Method.NONE
     f=0; %dummy variable

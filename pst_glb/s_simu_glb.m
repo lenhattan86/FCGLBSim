@@ -1,4 +1,4 @@
-SINGLE_RUN = true;
+SINGLE_RUN = false;
 %%
 if ~exist('IS_MULTIPLE_RUN','var') || SINGLE_RUN
     clear all
@@ -15,7 +15,7 @@ jay = sqrt(-1);
 pst_var % set up global variables
 
 %% Setting parameters by Tan N. Le
-global RUNNING_MODE METHOD INCIDENT_START DELAY FLEX END_TIME WEIGHT NEW_ENG_BASE
+global RUNNING_MODE METHOD INCIDENT_START DELAY FLEX END_TIME WEIGHT NEW_ENG_BASE TIME_STEP
 
 addpath('glb_data');
 addpath('glb_func');
@@ -27,12 +27,12 @@ if useLocalParameters
 %   RUNNING_MODE = RunningMode.LoadChange;
   RUNNING_MODE = RunningMode.GenLoss;
 %   RUNNING_MODE = RunningMode.None;
-%  METHOD = Method.proposed;
-   METHOD = Method.OLC;
+ METHOD = Method.proposed;
+%    METHOD = Method.OLC;
 %   METHOD = Method.NONE;
   INCIDENT_START = 5; % seconds
-%   DELAY = 0.01; % 10ms secs
-  DELAY = 0.1;  
+  DELAY = 0.1; 
+  TIME_STEP = 0.1; % default 0.01
   FLEX = 0.4;
   IS_PLOT = true;
   WEIGHT = 75; %$/MW-Hz
@@ -42,7 +42,7 @@ else
   IS_PLOT = false;
 end
 
-strScenario = [char(RUNNING_MODE) '_' char(METHOD) '_' num2str(FLEX) '_' num2str(DELAY) '_' num2str(WEIGHT) '_' num2str(GAMMA)];
+strScenario = [char(RUNNING_MODE) '_' char(METHOD) '_' num2str(FLEX) '_' num2str(TIME_STEP) '_' num2str(WEIGHT) '_' num2str(GAMMA) '_' num2str(DELAY)];
 fprintf('[INFO] Running %s \n', strScenario)
 
 common_setttings

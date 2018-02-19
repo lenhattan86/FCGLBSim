@@ -1,6 +1,6 @@
 global RUNNING_MODE METHOD INCIDENT_START
 global gamma a c Phi mu fcp_lambda fcp_alpha sumOfD_j disturbance_gen_mod mac_scale fcp_beta fcp_gamma NEW_ENG_BASE
-global control_d
+global control_d TIME_STEP DELAY
 
 
 SYS_FREQ=60;
@@ -151,7 +151,8 @@ if METHOD == Method.offline
     end
 end
 
-OLCtime=DELAY;
+% OLCtime = DELAY;
+OLCtime = TIME_STEP;
 
 OLC_setpoint = bus(OLC_bus,6);
 
