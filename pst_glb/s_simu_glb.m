@@ -1,4 +1,4 @@
-SINGLE_RUN = false;
+SINGLE_RUN = true;
 %%
 if ~exist('IS_MULTIPLE_RUN','var') || SINGLE_RUN
     clear all
@@ -31,7 +31,7 @@ if useLocalParameters
 %    METHOD = Method.OLC;
 %   METHOD = Method.NONE;
   INCIDENT_START = 5; % seconds
-  DELAY = 0.1; 
+  DELAY = 1.0; 
   TIME_STEP = 0.1; % default 0.01
   FLEX = 0.4;
   IS_PLOT = true;
@@ -1179,8 +1179,15 @@ matFile = [ strScenario '.mat'];
 strScenario
 temp = 'output/'; mkdir(temp);
 matFile = [temp matFile];
-save(matFile);
+save(matFile, 'load_freq', 'controlled_load', 'fcp_alpha', 'fcp_gamma','a','c','t', ...
+  'GAMMA', 'TIME_STEP','DELAY','FLEX','WEIGHT','mu');
 if(IS_PLOT)
+  close all;
   plotFrequencyTime(matFile, true);
 end
 strScenario
+return
+%%
+matFile = 'output/GenLoss_proposed_0.4_0.01_75_0.16_0.5.mat';
+close all;
+plotFrequencyTime(matFile, true);

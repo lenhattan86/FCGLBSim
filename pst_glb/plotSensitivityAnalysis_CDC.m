@@ -6,10 +6,10 @@ warning off;
 %%
 is_printed = true;
 figIdx = 0;
-delta_frequency = 1/100;
+delta_frequency = 0.5/100;
 figSize = figTwoThirdCol;
 % PLOTS = [true false false true false];
- PLOTS = [false false false false false]; PLOTS(1) = true;
+ PLOTS = [false true false false false];
 folder = 'output/';
 strLegends = {strOLC, strProposed, strNone, strOptimal};
   lines = { lineOLC, lineProposed, lineNone, lineOptimal};
@@ -147,14 +147,110 @@ if PLOTS(1)
 end
 %% control delay
 if PLOTS(2)    
-    FILES = {'GenLoss_proposed_0.5_0.01_1_1'...
-            ,'GenLoss_proposed_0.5_0.02_1_1'...
-            ,'GenLoss_proposed_0.5_0.04_1_1'...
-            ,'GenLoss_proposed_0.5_0.08_1_1'...
-            ,'GenLoss_proposed_0.5_0.16_1_1'...
+    FILES = {'GenLoss_proposed_0.4_0.01_75_0.16_0.01'...
+            ,'GenLoss_proposed_0.4_0.02_75_0.16_0.02'...
+            ,'GenLoss_proposed_0.4_0.04_75_0.16_0.04'...
+            ,'GenLoss_proposed_0.4_0.08_75_0.16_0.08'...
+            ,'GenLoss_proposed_0.4_0.16_75_0.16_0.16'...
+            ,'GenLoss_proposed_0.4_0.32_75_0.16_0.32'...
+            ,'GenLoss_proposed_0.4_0.64_75_0.16_0.64'...
             };    
-    DELAYS = 0.01*2.^(0:4);
+    DELAYS = 0.01*2.^(0:6);
     range = 1:length(DELAYS);
+    converge_time = zeros(size(FILES));
+    converged_freq = zeros(size(FILES));
+    
+    for iFile=1:length(FILES)
+       fileToLoad = [folder FILES{iFile} '.mat'];
+        if exist(fileToLoad,'file')                     
+          load(fileToLoad);
+          freq_dev = 1 - load_freq(:,:);
+          delta = inf;
+          start = INCIDENT_START/0.01 + 100;
+          iConverge = length(load_freq);
+
+          convergedVal = min(min(load_freq));
+          convergedLag = 1 - convergedVal;
+          for i=length(load_freq):-1:start
+            freq_lag = abs(load_freq(:,i)-convergedVal);
+            freq_dev_lag = abs(freq_dev(:,i) - freq_dev(:,i-1));
+            delta = max(freq_lag, freq_dev_lag);
+            if (max(delta/convergedLag) >= delta_frequency)
+                iConverge = i;
+                break;
+            end
+          end
+          converge_time(iFile) = t(iConverge);
+          converged_freq(iFile) = convergedVal*60;         
+              
+          d_j = controlled_load(:,length(controlled_load(1,:)));
+%           costs(iFile) = (fcp_alpha*fcp_gamma)/2*(sum(a.*d_j)).^2 + sum((c/2).* (d_j.^2)/2);    
+        end
+    end
+%     costs = costs.*DELAYS;    
+%     costs = costs*(BASE_POWER^2);
+    deta = delta_frequency*60;
+    converge_time = converge_time - INCIDENT_START;
+    
+    figure
+    plot(DELAYS(range),converge_time(range),'b-x', 'linewidth',lineWidth);
+    xlim([0 max(DELAYS(range))]);
+    ylim([0 max(ceil(converge_time(range)/5)*5)]);    
+    xlabel('delay (secs)','fontname', fontName,'fontsize',fontAxis);
+    ylabel('Convergence time (secs)','fontname', fontName,'fontsize',fontAxis);
+    
+    set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);    
+    
+    if is_printed
+      figIdx=figIdx +1;
+      fileNames{figIdx} = 'delay_converge_times';
+      epsFile = [ LOCAL_FIG fileNames{figIdx} '.eps'];
+        print ('-depsc', epsFile);
+    end
+    
+    % frequency
+    figure
+    bar(DELAYS(range), 60 - converged_freq(range), barWidth);
+%     xlim([min(FLEXES(range))-5, max(FLEXES(range))+5]);
+%     xlim([-5, max(WEIGHT_ARRAY(range))+5]);    
+    xlabel('delay (secs)','fontname', fontName,'fontsize',fontAxis);
+    ylabel('frequency deviation (Hz)','fontname', fontName,'fontsize',fontAxis);    
+    set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize); 
+    
+    if is_printed
+      figIdx=figIdx +1;
+      fileNames{figIdx} = 'delay_converged_freq_dev';
+      epsFile = [ LOCAL_FIG fileNames{figIdx} '.eps'];
+        print ('-depsc', epsFile);
+    end   
+    
+    % cost
+%     figure      
+%     plot(DELAYS(range), costs(range));
+%     xlim([min(WEIGHT_ARRAY(range))-5, max(WEIGHT_ARRAY(range))+5]);
+%     xlim([-5, max(WEIGHT_ARRAY(range))+5]); 
+%     xlabel(strDelay,'fontname', fontName,'fontsize',fontAxis);
+%     ylabel(strTotalCost,'fontname', fontName,'fontsize',fontAxis);    
+%     set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);    
+    
+%     if is_printed
+%       figIdx=figIdx +1;
+%       fileNames{figIdx} = 'delay_costs';
+%       epsFile = [ LOCAL_FIG fileNames{figIdx} '.eps'];
+%         print ('-depsc', epsFile);
+%     end     
+%     
+end
+%% step size
+if PLOTS(2)    
+    FILES = {'GenLoss_proposed_0.4_0.01_75_0.16_0'...
+            ,'GenLoss_proposed_0.4_0.02_75_0.16_0'...
+            ,'GenLoss_proposed_0.4_0.04_75_0.16_0'...
+            ,'GenLoss_proposed_0.4_0.08_75_0.16_0'...
+            ,'GenLoss_proposed_0.4_0.16_75_0.16_0'...
+            };    
+    TIME_STEPS = 0.01*2.^(0:4);
+    range = 1:length(TIME_STEPS);
     converge_time = zeros(size(FILES));
     converged_freq = zeros(size(FILES));
     
@@ -182,19 +278,19 @@ if PLOTS(2)
           converged_freq(iFile) = convergedVal*60;         
               
           d_j = controlled_load(:,length(controlled_load(1,:)));
-          costs(iFile) = (fcp_alpha*fcp_gamma)/2*(sum(a.*d_j')).^2 + sum((c/2).* (d_j.^2)/2);    
+%           costs(iFile) = (fcp_alpha*fcp_gamma)/2*(sum(a.*d_j)).^2 + sum((c/2).* (d_j.^2)/2);    
         end
     end
-    costs = costs.*DELAYS;    
-    costs = costs*(BASE_POWER^2);
+%     costs = costs.*DELAYS;    
+%     costs = costs*(BASE_POWER^2);
     deta = delta_frequency*60;
     converge_time = converge_time - INCIDENT_START;
     
     figure
-    plot(DELAYS(range),converge_time(range),'b-x', 'linewidth',lineWidth);
-    xlim([0 max(DELAYS(range))]);
+    plot(TIME_STEPS(range),converge_time(range),'b-x', 'linewidth',lineWidth);
+    xlim([0 max(TIME_STEPS(range))]);
     ylim([0 max(ceil(converge_time(range)/5)*5)]);    
-    xlabel('delay','fontname', fontName,'fontsize',fontAxis);
+    xlabel('time step (secs)','fontname', fontName,'fontsize',fontAxis);
     ylabel('Convergence time (secs)','fontname', fontName,'fontsize',fontAxis);
     
     set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);    
@@ -208,10 +304,10 @@ if PLOTS(2)
     
     % frequency
     figure
-    bar(DELAYS(range), 60 - converged_freq(range), barWidth);
+    bar(TIME_STEPS(range), 60 - converged_freq(range), barWidth);
 %     xlim([min(FLEXES(range))-5, max(FLEXES(range))+5]);
 %     xlim([-5, max(WEIGHT_ARRAY(range))+5]);    
-    xlabel('delay','fontname', fontName,'fontsize',fontAxis);
+    xlabel('time step (secs)','fontname', fontName,'fontsize',fontAxis);
     ylabel('frequency deviation (Hz)','fontname', fontName,'fontsize',fontAxis);    
     set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize); 
     
@@ -223,21 +319,21 @@ if PLOTS(2)
     end   
     
     % cost
-    figure      
-    plot(DELAYS(range), costs(range));
+%     figure      
+%     plot(DELAYS(range), costs(range));
 %     xlim([min(WEIGHT_ARRAY(range))-5, max(WEIGHT_ARRAY(range))+5]);
 %     xlim([-5, max(WEIGHT_ARRAY(range))+5]); 
-    xlabel(strDelay,'fontname', fontName,'fontsize',fontAxis);
-    ylabel(strTotalCost,'fontname', fontName,'fontsize',fontAxis);    
-    set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);    
+%     xlabel(strDelay,'fontname', fontName,'fontsize',fontAxis);
+%     ylabel(strTotalCost,'fontname', fontName,'fontsize',fontAxis);    
+%     set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);    
     
-    if is_printed
-      figIdx=figIdx +1;
-      fileNames{figIdx} = 'delay_costs';
-      epsFile = [ LOCAL_FIG fileNames{figIdx} '.eps'];
-        print ('-depsc', epsFile);
-    end     
-    
+%     if is_printed
+%       figIdx=figIdx +1;
+%       fileNames{figIdx} = 'delay_costs';
+%       epsFile = [ LOCAL_FIG fileNames{figIdx} '.eps'];
+%         print ('-depsc', epsFile);
+%     end     
+%     
 end
 %% importance of frequency deviation.
 if PLOTS(3)    
@@ -268,11 +364,11 @@ if PLOTS(3)
 
           convergedVal = min(min(load_freq));
           convergedLag = 1 - convergedVal;
-          for i=start:length(load_freq)      
+          for i=length(load_freq):-1:start      
             freq_lag = abs(load_freq(:,i)-convergedVal);
             freq_dev_lag = abs(freq_dev(:,i) - freq_dev(:,i-1));
             delta = max(freq_lag, freq_dev_lag);
-            if (max(delta/convergedLag) < delta_frequency)
+            if (max(delta/convergedLag) >= delta_frequency)
                 iConverge = i;
                 break;
             end

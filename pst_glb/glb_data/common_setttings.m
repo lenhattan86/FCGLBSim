@@ -210,7 +210,7 @@ GAMMA = GAMMA/WEIGHT; %cost in terms of freq dev.
 fcp_lambda  = 0.001; % step size CDC: 0.001
 fcp_gamma  = GAMMA;
 fcp_beta  = WEIGHT;
-mu = zeros(1,1);
+mu = zeros(1,END_TIME*100);
 
 % c is eta, 0.11*2.*rand(1,DC_num) + 0
 % mean(c) =  0.11/POWER_BASE^2

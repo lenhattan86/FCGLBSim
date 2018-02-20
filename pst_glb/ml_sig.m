@@ -56,10 +56,19 @@ if METHOD==Method.proposed
 %             disp('debug');
 %           end
           % algorithm parts   
-          control_d = (ones(size(c))./c).*(freq_deviation - a*mu(k));   
+          
+          delay_mu = 0;
+          if k>delay_step
+            delay_mu = mu(k-delay_step);            
+          end
+          
+          control_d = (ones(size(c))./c).*(freq_deviation - a*delay_mu);
           control_d = max(min(control_d,OLC_capacity(:,2)),OLC_capacity(:,1)); 
           
-          mu(k+OLCstep) = mu(k) + fcp_lambda * ((sum(a.*control_d)*(fcp_gamma) - mu(k))./(fcp_gamma)); %To fix problems with small gamma
+%           if k> (delay_step-OLCstep)
+          mu(k+OLCstep) = mu(k) + fcp_lambda * ((sum(a.*control_d)*(fcp_gamma) - mu(k))./(fcp_gamma)); %To fix problems with small gamma          
+%           end
+          
           %mu(k+OLCstep) = mu(k) + fcp_lambda * (sum(a.*control_d) - mu(k)/(fcp_gamma));           
           controlled_load(:,k) = control_d;
 %           lmod_sig(OLC_mod,k) = lmod_sig(OLC_mod,k) + controlled_load(:,k);
@@ -68,9 +77,10 @@ if METHOD==Method.proposed
           controlled_load(:,k) = control_d;
 %           lmod_sig(OLC_mod,k) = lmod_sig(OLC_mod,k) + control_d;     
         end
-        if k>delay_step
-          lmod_sig(OLC_mod,k) = lmod_sig(OLC_mod,k) + controlled_load(:,k-delay_step);
-        end 
+%         if k>delay_step
+%           lmod_sig(OLC_mod,k) = lmod_sig(OLC_mod,k) + controlled_load(:,k-delay_step);
+%         end 
+          lmod_sig(OLC_mod,k) = lmod_sig(OLC_mod,k) + controlled_load(:,k);
       else
         mu(k+1) = -9999;
       end    

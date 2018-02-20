@@ -71,14 +71,14 @@ end
 %% Delay 
 iRun = iRun+1;
 if true %runs(iRun)
-  DELAY_ARRAY = 0.01*2.^(0:4);
+  DELAY_ARRAY = 0.01*2.^(5:10);
   for i_DELAY_ARRAY=1:length(DELAY_ARRAY)
     default_settings;
     END_TIME = 1000;
     METHOD = Method.proposed;
     FLEX = 0.4;
-    TIME_STEP = DELAY_ARRAY(i_DELAY_ARRAY);
-     DELAY = DELAY_ARRAY(i_DELAY_ARRAY);
+    TIME_STEP = 0.01;
+    DELAY = DELAY_ARRAY(i_DELAY_ARRAY);
     s_simu_glb;
   end
 end
@@ -86,14 +86,14 @@ end
 %% TIME STEP 
 iRun = iRun+1;
 if true %runs(iRun)
-  TIME_STEP_ARRAY = 0.01*2.^(0:4);
+  TIME_STEP_ARRAY = 0.01*2.^(5:10);
   for i_TIME_STEP_ARRAY=1:length(TIME_STEP_ARRAY)
     default_settings;
     END_TIME = 1000;
     METHOD = Method.proposed;
     FLEX = 0.4;
     DELAY = 0.0;
-    TIME_STEP = TIME_STEP_ARRAY(TIME_STEP_ARRAY);
+    TIME_STEP = TIME_STEP_ARRAY(i_TIME_STEP_ARRAY);
     s_simu_glb;
   end
 end
