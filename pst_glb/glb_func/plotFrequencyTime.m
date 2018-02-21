@@ -25,8 +25,9 @@ function [ success ] = plotFrequencyTime( matFile, isPrintted)
 
     figure 
     temp = mu(1:length(t));
-    muIds = temp~=0;
-    plot(t(muIds), temp(muIds), 'LineWidth',lineWidth);
+%     muIds = temp~=0;
+%     plot(t(muIds), temp(muIds), 'LineWidth',lineWidth);
+    plot(t, temp, 'LineWidth',lineWidth);
     figSize = figOneCol;
     set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);
     

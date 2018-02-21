@@ -1,4 +1,4 @@
-SINGLE_RUN = true;
+SINGLE_RUN = false;
 %%
 if ~exist('IS_MULTIPLE_RUN','var') || SINGLE_RUN
     clear all
@@ -46,7 +46,8 @@ strScenario = [char(RUNNING_MODE) '_' char(METHOD) '_' num2str(FLEX) '_' num2str
 fprintf('[INFO] Running %s \n', strScenario)
 
 common_setttings
-fcp_lambda  = 0.001; % 0.001
+% fcp_lambda  = 0.001; % 0.001
+fcp_lambda  = 0.001 * TIME_STEP;
 additional_settings
 
 %% 
@@ -1186,8 +1187,8 @@ if(IS_PLOT)
   plotFrequencyTime(matFile, true);
 end
 strScenario
-return
-%%
-matFile = 'output/GenLoss_proposed_0.4_0.01_75_0.16_0.5.mat';
-close all;
-plotFrequencyTime(matFile, true);
+% return
+% %%
+% matFile = 'output/GenLoss_proposed_0.4_0.01_75_0.16_0.5.mat';
+% close all;
+% plotFrequencyTime(matFile, true);

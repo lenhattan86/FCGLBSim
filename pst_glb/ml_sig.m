@@ -66,6 +66,7 @@ if METHOD==Method.proposed
           control_d = max(min(control_d,OLC_capacity(:,2)),OLC_capacity(:,1)); 
           
 %           if k> (delay_step-OLCstep)
+%           mu(k+1:k+OLCstep) = mu(k) + fcp_lambda * ((sum(a.*control_d)*(fcp_gamma) - mu(k))./(fcp_gamma)); %To fix problems with small gamma          
           mu(k+OLCstep) = mu(k) + fcp_lambda * ((sum(a.*control_d)*(fcp_gamma) - mu(k))./(fcp_gamma)); %To fix problems with small gamma          
 %           end
           
@@ -73,6 +74,7 @@ if METHOD==Method.proposed
           controlled_load(:,k) = control_d;
 %           lmod_sig(OLC_mod,k) = lmod_sig(OLC_mod,k) + controlled_load(:,k);
         else
+          mu(k+OLCstep) = mu(k+OLCstep-1);
           control_d = controlled_load(:,k-1);
           controlled_load(:,k) = control_d;
 %           lmod_sig(OLC_mod,k) = lmod_sig(OLC_mod,k) + control_d;     
