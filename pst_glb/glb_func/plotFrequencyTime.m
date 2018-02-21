@@ -18,10 +18,10 @@ function [ success ] = plotFrequencyTime( matFile, isPrintted)
     figSize = figOneCol;
     set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);
 
-%     if isPrintted
-%       epsFile = [ LOCAL_FIG matFile '_freq' '.eps'];
-%         print ('-depsc', epsFile);
-%     end
+    if isPrintted
+      epsFile = [ LOCAL_FIG 'test_freq' '.eps'];
+        print ('-depsc', epsFile);
+    end
 
     figure 
     temp = mu(1:length(t));

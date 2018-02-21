@@ -6,10 +6,9 @@ warning off;
 %%
 is_printed = true;
 figIdx = 0;
-delta_frequency = 0.5/100;
+delta_frequency = 10^-5;
 figSize = figTwoThirdCol;
-% PLOTS = [true false false true false];
- PLOTS = [false true false false false];
+ PLOTS = [false true false false false false];
 folder = 'output/';
 strLegends = {strOLC, strProposed, strNone, strOptimal};
   lines = { lineOLC, lineProposed, lineNone, lineOptimal};
@@ -147,16 +146,32 @@ if PLOTS(1)
 end
 %% control delay
 if PLOTS(2)    
-    FILES = {'GenLoss_proposed_0.4_0.01_75_0.16_0.01'...
-            ,'GenLoss_proposed_0.4_0.02_75_0.16_0.02'...
-            ,'GenLoss_proposed_0.4_0.04_75_0.16_0.04'...
-            ,'GenLoss_proposed_0.4_0.08_75_0.16_0.08'...
-            ,'GenLoss_proposed_0.4_0.16_75_0.16_0.16'...
-            ,'GenLoss_proposed_0.4_0.32_75_0.16_0.32'...
-            ,'GenLoss_proposed_0.4_0.64_75_0.16_0.64'...
-            };    
-    DELAYS = 0.01*2.^(0:6);
+    FILES = {'GenLoss_proposed_0.4_0.1_75_0.16_0'...
+            ,'GenLoss_proposed_0.4_0.1_75_0.16_0.1'...
+            ,'GenLoss_proposed_0.4_0.1_75_0.16_0.2'...
+            ,'GenLoss_proposed_0.4_0.1_75_0.16_0.4'...
+            ,'GenLoss_proposed_0.4_0.1_75_0.16_0.8'...
+            ,'GenLoss_proposed_0.4_0.1_75_0.16_1'...
+            ,'GenLoss_proposed_0.4_0.1_75_0.16_2'...
+            ,'GenLoss_proposed_0.4_0.1_75_0.16_3'...
+            ,'GenLoss_proposed_0.4_0.1_75_0.16_4'...
+            ,'GenLoss_proposed_0.4_0.1_75_0.16_5'...
+            };  
+%       FILES = {'GenLoss_proposed_0.4_0.01_75_0.16_0'...
+%             ,'GenLoss_proposed_0.4_0.01_75_0.16_0.1'...
+%             ,'GenLoss_proposed_0.4_0.01_75_0.16_0.2'...
+%             ,'GenLoss_proposed_0.4_0.01_75_0.16_0.4'...
+%             ,'GenLoss_proposed_0.4_0.01_75_0.16_0.8'...
+%             ,'GenLoss_proposed_0.4_0.01_75_0.16_1'...
+%             ,'GenLoss_proposed_0.4_0.01_75_0.16_2'...
+%             ,'GenLoss_proposed_0.4_0.01_75_0.16_3'...
+%             ,'GenLoss_proposed_0.4_0.01_75_0.16_4'...
+%             ,'GenLoss_proposed_0.4_0.01_75_0.16_5'...
+%             };         
+%     DELAYS = 0.01*2.^(0:6);
+    DELAYS = [0 0.1 0.2 0.4 0.8 1.0 2.0 3.0 4.0 5.0];
     range = 1:length(DELAYS);
+    INCIDENT_START = 5;
     converge_time = zeros(size(FILES));
     converged_freq = zeros(size(FILES));
     
@@ -175,7 +190,8 @@ if PLOTS(2)
             freq_lag = abs(load_freq(:,i)-convergedVal);
             freq_dev_lag = abs(freq_dev(:,i) - freq_dev(:,i-1));
             delta = max(freq_lag, freq_dev_lag);
-            if (max(delta/convergedLag) >= delta_frequency)
+%             if (max(delta/convergedLag) >= delta_frequency)
+            if (max(freq_lag) >= delta_frequency)
                 iConverge = i;
                 break;
             end
@@ -240,9 +256,24 @@ if PLOTS(2)
 %         print ('-depsc', epsFile);
 %     end     
 %     
+    fileToLoad = [folder FILES{1} '.mat'];
+    load(fileToLoad);
+    plot(t,load_freq*60, 'LineWidth',lineWidth);
+    xlabel('Time (sec)','fontname', 'Arial','fontsize',fontAxis);
+    ylabel('Frequency (Hz)','fontname', 'Arial','fontsize',fontAxis)    
+    figSize = figOneCol;
+    set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);
+    
+    if is_printed
+      figIdx=figIdx +1;
+      fileNames{figIdx} = 'freq_conv';
+      epsFile = [ LOCAL_FIG fileNames{figIdx} '.eps'];
+        print ('-depsc', epsFile);
+    end 
+    
 end
 %% step size
-if PLOTS(2)    
+if PLOTS(3)    
     FILES = {'GenLoss_proposed_0.4_0.01_75_0.16_0'...
             ,'GenLoss_proposed_0.4_0.02_75_0.16_0'...
             ,'GenLoss_proposed_0.4_0.04_75_0.16_0'...
@@ -336,7 +367,7 @@ if PLOTS(2)
 %     
 end
 %% importance of frequency deviation.
-if PLOTS(3)    
+if PLOTS(4)    
     FILES = {'GenLoss_OLC_0.5_0.01_0'...
             ,'GenLoss_OLC_0.5_0.01_0.2'...
             ,'GenLoss_OLC_0.5_0.01_0.4'...
@@ -434,7 +465,7 @@ if PLOTS(3)
     end  
 end
 %% importance of interdepence cost
-if PLOTS(4)    
+if PLOTS(5)    
     FILES = {%'GenLoss_OLC_0.4_0.01_75_0.005'...
             %,'GenLoss_OLC_0.4_0.01_75_0.015'...
             'GenLoss_OLC_0.4_0.01_75_0.03'...
@@ -552,7 +583,7 @@ if PLOTS(4)
     end  
 end
 %% importance of costs
-if PLOTS(5)    
+if PLOTS(6)    
     FILES = {'GenLoss_OLC_0.4_0.01_75_0.01'...
             ,'GenLoss_OLC_0.4_0.01_75_0.02'...
             ,'GenLoss_OLC_0.4_0.01_75_0.03'...
@@ -686,10 +717,12 @@ end
 %%
 return
 %% convert to pdf FILES
+fig_path = '/home/tanle/Dropbox/Papers/FCGLB/FCGLB/TCNS_18/images/';
 for i=1:length(fileNames)
     fileName = fileNames{i};
     epsFile = [ LOCAL_FIG fileName '.eps'];
-    pdfFile = [ fig_path fileName '.pdf'];    
+    pdfFile = [ fig_path fileName '.pdf']; 
+    pdfFile
     cmd = sprintf(PS_CMD_FORMAT, epsFile, pdfFile);
     status = system(cmd);
 end

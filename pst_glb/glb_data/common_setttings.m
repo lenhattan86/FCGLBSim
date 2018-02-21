@@ -1,5 +1,5 @@
 global RUNNING_MODE METHOD INCIDENT_START
-global gamma a c Phi mu fcp_lambda fcp_alpha sumOfD_j disturbance_gen_mod mac_scale fcp_beta fcp_gamma NEW_ENG_BASE
+global gamma a c Phi mu fcp_lambda fcp_alpha sumOfD_j disturbance_gen_mod mac_scale fcp_beta fcp_gamma NEW_ENG_BASE 
 global control_d TIME_STEP DELAY
 
 
@@ -207,7 +207,7 @@ WEIGHT = WEIGHT*NEW_ENG_BASE/BASE_POWER; %scale from 14 GW to total power of sim
 WEIGHT = WEIGHT*BASE_POWER*SYS_FREQ; %Scaling down to pu for power and frequency
 GAMMA = GAMMA/WEIGHT; %cost in terms of freq dev.
 
-fcp_lambda  = 0.001; % step size CDC: 0.001
+% fcp_lambda  = 0.001; % step size CDC: 0.001
 fcp_gamma  = GAMMA;
 fcp_beta  = WEIGHT;
 mu = zeros(1,END_TIME*100);

@@ -1,4 +1,4 @@
-SINGLE_RUN = false;
+SINGLE_RUN = true;
 %%
 if ~exist('IS_MULTIPLE_RUN','var') || SINGLE_RUN
     clear all
@@ -15,7 +15,7 @@ jay = sqrt(-1);
 pst_var % set up global variables
 
 %% Setting parameters by Tan N. Le
-global RUNNING_MODE METHOD INCIDENT_START DELAY FLEX END_TIME WEIGHT NEW_ENG_BASE TIME_STEP
+global RUNNING_MODE METHOD INCIDENT_START DELAY FLEX END_TIME WEIGHT NEW_ENG_BASE TIME_STEP fcp_lambda
 
 addpath('glb_data');
 addpath('glb_func');
@@ -31,23 +31,24 @@ if useLocalParameters
 %    METHOD = Method.OLC;
 %   METHOD = Method.NONE;
   INCIDENT_START = 5; % seconds
-  DELAY = 1.0; 
-  TIME_STEP = 0.1; % default 0.01
+  DELAY = 0.0; 
+  TIME_STEP = 0.01; % default 0.01
   FLEX = 0.4;
   IS_PLOT = true;
   WEIGHT = 75; %$/MW-Hz
   GAMMA = 0.16; %$/MW^2
   %GAMMA = 0.08; %$/MW^2
+  % fcp_lambda  = 0.001; % 0.001
+  % fcp_lambda  = 0.001 * TIME_STEP;
+  fcp_lambda  = 0.000;
 else
   IS_PLOT = false;
 end
 
-strScenario = [char(RUNNING_MODE) '_' char(METHOD) '_' num2str(FLEX) '_' num2str(TIME_STEP) '_' num2str(WEIGHT) '_' num2str(GAMMA) '_' num2str(DELAY)];
+strScenario = [char(RUNNING_MODE) '_' char(METHOD) '_' num2str(FLEX) '_' num2str(TIME_STEP) '_' num2str(WEIGHT) '_' num2str(GAMMA) '_' num2str(DELAY) '_' num2str(fcp_lambda)];
 fprintf('[INFO] Running %s \n', strScenario)
 
 common_setttings
-% fcp_lambda  = 0.001; % 0.001
-fcp_lambda  = 0.001 * TIME_STEP;
 additional_settings
 
 %% 
@@ -1181,14 +1182,14 @@ strScenario
 temp = 'output/'; mkdir(temp);
 matFile = [temp matFile];
 save(matFile, 'load_freq', 'controlled_load', 'fcp_alpha', 'fcp_gamma','a','c','t', ...
-  'GAMMA', 'TIME_STEP','DELAY','FLEX','WEIGHT','mu');
+  'GAMMA', 'TIME_STEP','DELAY','FLEX','WEIGHT','mu','INCIDENT_START');
 if(IS_PLOT)
   close all;
   plotFrequencyTime(matFile, true);
 end
 strScenario
-% return
-% %%
-% matFile = 'output/GenLoss_proposed_0.4_0.01_75_0.16_0.5.mat';
-% close all;
-% plotFrequencyTime(matFile, true);
+return
+%%
+matFile = 'output/GenLoss_proposed_0.4_0.1_75_0.16_5.mat';
+close all;
+plotFrequencyTime(matFile, true);
