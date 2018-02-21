@@ -36,8 +36,8 @@ if PLOTS(1)
   end
 
   plot(GAMMA_ARRAY, yVals(1,:)./yVals(2,:),'linewidth', lineWidth);
-  xlim([0 5]);
-  ylim([0 1.5]);
+  xlim([0 10]);
+  ylim([0 2.5]);
 
   % legend(strLegends,'Location','northwest','FontSize', fontLegend,'Orientation','horizontal');
   ylabel('normalized cost','fontname', 'Arial','fontsize', fontAxis);    
@@ -82,10 +82,11 @@ if PLOTS(2)
   plot(GAMMA_ARRAY, Y1(1,:), lines{1},'linewidth',lineWidth,'Color', colors{1});
   hold on;
   plot(GAMMA_ARRAY, Y2(1,:), lines{2},'linewidth',lineWidth,'Color', colors{2});
-  ylim([0 150]);
-  xlim([0 5]);
+  ylim([0 250]);
+  xlim([0 10]);
   legend(strLegends,'Location','northwest','FontSize', fontLegend,'Orientation','vertical');
-  ylabel(strCost,'fontname', fontName,'fontsize', fontAxis);    
+  %ylabel(strCost,'fontname', fontName,'fontsize', fontAxis);
+  ylabel('indep. cost','fontname', fontName,'fontsize', fontAxis);
   xlabel('\gamma','fontname', fontName,'fontsize', fontAxis);
   set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);
 
@@ -101,10 +102,11 @@ if PLOTS(2)
   plot(GAMMA_ARRAY, Y1(2,:), lines{1},'linewidth',lineWidth,'Color', colors{1});
   hold on;
   plot(GAMMA_ARRAY, Y2(2,:), lines{2},'linewidth',lineWidth,'Color', colors{2});
-  ylim([0 150]);
-  xlim([0 5]);
+  ylim([0 250]);
+  xlim([0 10]);
   legend(strLegends,'Location','northwest','FontSize', fontLegend,'Orientation','vertical');
-  ylabel(strCost,'fontname', fontName,'fontsize', fontAxis);    
+  %ylabel(strCost,'fontname', fontName,'fontsize', fontAxis);
+  ylabel('interdep. cost','fontname', fontName,'fontsize', fontAxis);    
   xlabel('\gamma','fontname', fontName,'fontsize', fontAxis);
   set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);
 
