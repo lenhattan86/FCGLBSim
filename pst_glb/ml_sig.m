@@ -34,8 +34,6 @@ if METHOD==Method.proposed
       
       if t>INCIDENT_START
         lmod_sig(disturbance_mod,k)=changedLoad;  %step increase of load at some of the buses
-      else
-        mu(k) = 0;
       end
       
       if k>1
@@ -83,8 +81,8 @@ if METHOD==Method.proposed
 %           lmod_sig(OLC_mod,k) = lmod_sig(OLC_mod,k) + controlled_load(:,k-delay_step);
 %         end 
           lmod_sig(OLC_mod,k) = lmod_sig(OLC_mod,k) + controlled_load(:,k);
-      else
-        mu(k+1) = -9999;
+%       else
+%         mu(k+1) = -9999;
       end    
    end
 elseif METHOD == Method.optimal

@@ -15,7 +15,7 @@ jay = sqrt(-1);
 pst_var % set up global variables
 
 %% Setting parameters by Tan N. Le
-global RUNNING_MODE METHOD INCIDENT_START DELAY FLEX END_TIME WEIGHT NEW_ENG_BASE TIME_STEP fcp_lambda
+global RUNNING_MODE METHOD INCIDENT_START DELAY FLEX END_TIME WEIGHT NEW_ENG_BASE TIME_STEP fcp_lambda isSave
 
 addpath('glb_data');
 addpath('glb_func');
@@ -39,8 +39,8 @@ if useLocalParameters
   GAMMA = 0.16; %$/MW^2
   %GAMMA = 0.08; %$/MW^2
   % fcp_lambda  = 0.001; % 0.001
-  % fcp_lambda  = 0.001 * TIME_STEP;
-  fcp_lambda  = 0.000;
+  fcp_lambda  = 0.001 * TIME_STEP;
+  isSave = true;
 else
   IS_PLOT = false;
 end
@@ -836,7 +836,7 @@ while (kt<=ktmax)
       if ndcr_ud~=0
          tot_states=0;
          for jj = 1:ndcr_ud
-            b_num1 = dcr_dc{jj,3};b_num2 = dcr_dc{jj,4};conv_num = dcr_dc{jj,2};
+            b_num1 = dcr_dc{jj,11};b_num2 = dcr_dc{jj,4};conv_num = dcr_dc{jj,2};
             angdcr(jj,j)=theta(bus_int(b_num1),j)-theta(bus_int(b_num2),j);
             dcrd_sig(jj,j)=angdcr(jj,j);
             st_state = tot_states+1; dcr_states = dcr_dc{jj,7}; tot_states = tot_states+dcr_states; 
@@ -1181,8 +1181,11 @@ matFile = [ strScenario '.mat'];
 strScenario
 temp = 'output/'; mkdir(temp);
 matFile = [temp matFile];
-save(matFile, 'load_freq', 'controlled_load', 'fcp_alpha', 'fcp_gamma','a','c','t', ...
-  'GAMMA', 'TIME_STEP','DELAY','FLEX','WEIGHT','mu','INCIDENT_START');
+if isSave
+  save(matFile, 'load_freq', 'controlled_load', 'fcp_alpha', 'fcp_gamma','a','c','t', ...
+    'GAMMA', 'TIME_STEP','DELAY','FLEX','WEIGHT','mu','INCIDENT_START','OLC_bus','disturbance_mod','disturbance_size','OLC_capacity',...
+    'BASE_POWER');
+end
 if(IS_PLOT)
   close all;
   plotFrequencyTime(matFile, true);
@@ -1190,6 +1193,6 @@ end
 strScenario
 return
 %%
-matFile = 'output/GenLoss_proposed_0.4_0.1_75_0.16_5.mat';
+matFile = 'output/GenLoss_proposed_0.4_0.1_75_0.16_5_0.0001.mat';
 close all;
 plotFrequencyTime(matFile, true);

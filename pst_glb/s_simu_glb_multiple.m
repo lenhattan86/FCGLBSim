@@ -1,5 +1,6 @@
 clear global; clear; clc; close all; 
-global RUNNING_MODE METHOD INCIDENT_START DELAY FLEX END_TIME WEIGHT TIME_STEP
+global RUNNING_MODE METHOD INCIDENT_START DELAY FLEX END_TIME WEIGHT TIME_STEP fcp_lambda isSave
+isSave = true;
 %%
 IS_MULTIPLE_RUN = true;
 addpath('glb_data');
@@ -72,14 +73,25 @@ end
 iRun = iRun+1;
 if true %runs(iRun)
 %   DELAY_ARRAY = 0.01*2.^(5:10);
-  DELAY_ARRAY = [0 0.1 0.2 0.4 0.8 1.0 2.0 3.0 4.0 5.0];
+%   DELAY_ARRAY = [0 0.1 0.2 0.4 0.8 1.0 2.0 3.0 4.0 5.0];  
+  DELAY_ARRAY = [0 0.1 0.2 1.0 3.0 5.0]; 
   for i_DELAY_ARRAY=1:length(DELAY_ARRAY)
     default_settings;
     END_TIME = 200;
     METHOD = Method.proposed;
     FLEX = 0.4;
-    TIME_STEP = 0.01;
+    TIME_STEP = 0.1;
     DELAY = DELAY_ARRAY(i_DELAY_ARRAY);
+%     fcp_lambda = 0.01*TIME_STEP; 
+    fcp_lambda = 0.02*TIME_STEP; 
+%     fcp_lambda = 0.005*TIME_STEP; 
+%     fcp_lambda = 0.002*TIME_STEP; 
+%     fcp_lambda = 0.001*TIME_STEP; % converge
+%    fcp_lambda = 0.0005*TIME_STEP; 
+%    fcp_lambda = 0.0001*TIME_STEP;  % not converge
+
+%       fcp_lambda = 0.00001*TIME_STEP; % converge too slowly
+
     s_simu_glb;
   end
 end

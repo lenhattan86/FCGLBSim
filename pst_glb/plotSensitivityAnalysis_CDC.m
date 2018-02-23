@@ -177,31 +177,7 @@ if PLOTS(2)
     
     for iFile=1:length(FILES)
        fileToLoad = [folder FILES{iFile} '.mat'];
-        if exist(fileToLoad,'file')                     
-          load(fileToLoad);
-          freq_dev = 1 - load_freq(:,:);
-          delta = inf;
-          start = INCIDENT_START/0.01 + 100;
-          iConverge = length(load_freq);
-
-          convergedVal = min(min(load_freq));
-          convergedLag = 1 - convergedVal;
-          for i=length(load_freq):-1:start
-            freq_lag = abs(load_freq(:,i)-convergedVal);
-            freq_dev_lag = abs(freq_dev(:,i) - freq_dev(:,i-1));
-            delta = max(freq_lag, freq_dev_lag);
-%             if (max(delta/convergedLag) >= delta_frequency)
-            if (max(freq_lag) >= delta_frequency)
-                iConverge = i;
-                break;
-            end
-          end
-          converge_time(iFile) = t(iConverge);
-          converged_freq(iFile) = convergedVal*60;         
-              
-          d_j = controlled_load(:,length(controlled_load(1,:)));
-%           costs(iFile) = (fcp_alpha*fcp_gamma)/2*(sum(a.*d_j)).^2 + sum((c/2).* (d_j.^2)/2);    
-        end
+       [converge_time(iFile), iConverge, converged_freq(iFile) ] = computeConvergentTime( fileToLoad, delta_frequency );
     end
 %     costs = costs.*DELAYS;    
 %     costs = costs*(BASE_POWER^2);
@@ -211,7 +187,7 @@ if PLOTS(2)
     figure
     plot(DELAYS(range),converge_time(range),'b-x', 'linewidth',lineWidth);
     xlim([0 max(DELAYS(range))]);
-    ylim([0 max(ceil(converge_time(range)/5)*5)]);    
+%     ylim([0 max(ceil(converge_time(range)/5)*5)]);    
     xlabel('delay (secs)','fontname', fontName,'fontsize',fontAxis);
     ylabel('Convergence time (secs)','fontname', fontName,'fontsize',fontAxis);
     
@@ -256,20 +232,21 @@ if PLOTS(2)
 %         print ('-depsc', epsFile);
 %     end     
 %     
-    fileToLoad = [folder FILES{1} '.mat'];
-    load(fileToLoad);
-    plot(t,load_freq*60, 'LineWidth',lineWidth);
-    xlabel('Time (sec)','fontname', 'Arial','fontsize',fontAxis);
-    ylabel('Frequency (Hz)','fontname', 'Arial','fontsize',fontAxis)    
-    figSize = figOneCol;
-    set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);
-    
-    if is_printed
-      figIdx=figIdx +1;
-      fileNames{figIdx} = 'freq_conv';
-      epsFile = [ LOCAL_FIG fileNames{figIdx} '.eps'];
-        print ('-depsc', epsFile);
-    end 
+
+%     fileToLoad = [folder FILES{1} '.mat'];
+%     load(fileToLoad);
+%     plot(t,load_freq*60, 'LineWidth',lineWidth);
+%     xlabel('Time (sec)','fontname', 'Arial','fontsize',fontAxis);
+%     ylabel('Frequency (Hz)','fontname', 'Arial','fontsize',fontAxis)    
+%     figSize = figOneCol;
+%     set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);
+%     
+%     if is_printed
+%       figIdx=figIdx +1;
+%       fileNames{figIdx} = 'freq_conv';
+%       epsFile = [ LOCAL_FIG fileNames{figIdx} '.eps'];
+%         print ('-depsc', epsFile);
+%     end 
     
 end
 %% step size

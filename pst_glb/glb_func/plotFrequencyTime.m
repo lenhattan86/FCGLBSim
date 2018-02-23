@@ -30,9 +30,23 @@ function [ success ] = plotFrequencyTime( matFile, isPrintted)
     plot(t, temp, 'LineWidth',lineWidth);
     figSize = figOneCol;
     set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);
-    
+
     xlabel('time(sec)','fontname', 'Arial','fontsize',fontAxis);
-    ylabel('\mu','fontname', 'Arial','fontsize',fontAxis)
+    ylabel('\mu','fontname', 'Arial','fontsize',fontAxis);
+    
+        
+    figure 
+    d_j = controlled_load(:,length(controlled_load(1,:)));
+    costs(1) = WEIGHT*sum((c/2).* (d_j.^2)/2);  
+    costs(2) = WEIGHT*(fcp_gamma)/2*(sum(a.*d_j)).^2;  
+    temp = mu(1:length(t));
+%     muIds = temp~=0;
+%     plot(t(muIds), temp(muIds), 'LineWidth',lineWidth);
+    hBar = bar(costs, 0.2, 'stacked');
+    figSize = figOneCol;
+    set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);
+%     xlabel('time(sec)','fontname', 'Arial','fontsize',fontAxis);
+%     ylabel('\mu','fontname', 'Arial','fontsize',fontAxis);
     
   else
     error('file doest not exists');
