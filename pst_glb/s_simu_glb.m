@@ -27,9 +27,9 @@ if useLocalParameters
 %   RUNNING_MODE = RunningMode.LoadChange;
   RUNNING_MODE = RunningMode.GenLoss;
 %   RUNNING_MODE = RunningMode.None;
- METHOD = Method.proposed;
+%  METHOD = Method.proposed;
 %    METHOD = Method.OLC;
-%   METHOD = Method.NONE;
+  METHOD = Method.NONE;
   INCIDENT_START = 5; % seconds
   DELAY = 0.0; 
   TIME_STEP = 0.01; % default 0.01
@@ -39,7 +39,7 @@ if useLocalParameters
   GAMMA = 0.16; %$/MW^2
   %GAMMA = 0.08; %$/MW^2
   % fcp_lambda  = 0.001; % 0.001
-  fcp_lambda  = 0.001 * TIME_STEP;
+  fcp_lambda  = 0.001;
   isSave = true;
 else
   IS_PLOT = false;
@@ -1184,7 +1184,7 @@ matFile = [temp matFile];
 if isSave
   save(matFile, 'load_freq', 'controlled_load', 'fcp_alpha', 'fcp_gamma','a','c','t', ...
     'GAMMA', 'TIME_STEP','DELAY','FLEX','WEIGHT','mu','INCIDENT_START','OLC_bus','disturbance_mod','disturbance_size','OLC_capacity',...
-    'BASE_POWER');
+    'BASE_POWER','NEW_ENG_BASE');
 end
 if(IS_PLOT)
   close all;

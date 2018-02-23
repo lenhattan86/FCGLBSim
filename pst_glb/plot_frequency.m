@@ -1,16 +1,17 @@
 close all;
-common_settings
+addpath('glb_data');
+addpath('glb_func');
+addpath('glb_classes');
+
+common_setttings
+figure_settings
 fig_path = '../../FCGLB/full_paper_3/images/'
 figSize = [0.0 0 5.0 3.0];
 extra='_negative2';
-
-if exist('DC_flex')
-    dc_flex = DC_flex;
-else
-    dc_flex = 0.3;
-end
-
-dc_flex =0.25;
+figIdx = 0;
+folder = 'output/';
+filename = 'GenLoss_proposed_0.4_0.01_75_0.16_0_0.001.mat';
+filePath = [folder filename];
 
 %% plot the frequencies of generators
 plots = [false true true true];
@@ -51,7 +52,7 @@ end
 if plots(2)
     figure; 
 
-    load(['output/DGLB' int2str(100*dc_flex) '.mat']);
+    load(filePath);
     h3 = plot(t,load_freq(1,:)*60,'b--');  hold on;
     plot(t,load_freq*60,'b--');
     hold on;

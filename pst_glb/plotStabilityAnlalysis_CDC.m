@@ -5,7 +5,7 @@ figure_settings;
 warning off;
 %%
 
-PLOTS = [true true false false false false false];
+PLOTS = [false true true false false false false];
 
 X_LIM = 50;
 
@@ -15,13 +15,13 @@ GAMMA = 0.16;
 DELAY = 0.01;
 FLEX = 0.4;
 WEIGHT = 75;
-extra = ['_' num2str(FLEX) '_' num2str(DELAY) '_' num2str(WEIGHT) '_' num2str(GAMMA)];
+% extra = ['_' num2str(FLEX) '_' num2str(DELAY) '_' num2str(WEIGHT) '_' num2str(GAMMA)];
 dataFiles = {
-    ['GenLoss_OLC' extra];
-    ['GenLoss_proposed' extra];   
-    ['GenLoss_NONE' extra]; 
+    ['GenLoss_OLC_0.4_0.01_75_0.16_0_0.001'];
+    ['GenLoss_proposed_0.4_0.01_75_0.16_0_0.001'];   
+    ['GenLoss_NONE_0.4_0.01_75_0.16_0_0.001']; 
     };  
-optimalFile = ['GenLoss_optimal' extra];
+optimalFile = ['GenLoss_optimal'];
 
   
 figIdx = 0;
@@ -109,28 +109,33 @@ if PLOTS(2)
         print ('-depsc', epsFile);
     end
 end
+
 %%
 if PLOTS(3)
     figure; 
-    figSize = figHalfCol;
-    
-    for i=1:length(dataFiles)
+    figSize = figTwoThirdCol;
+        
+    for i=1:length(dataFiles)-1
       load([folder dataFiles{i} '.mat']);
-      costs = fcp_alpha/2*(a*controlled_load).^2;
-      hPlot(i) = plot(t,costs, lines{i}, 'linewidth', lineWidth,'Color',colors{i});      
+      
+      d_j = controlled_load;
+      independent_cost = WEIGHT*(c'/2) * (d_j.^2)/2;  
+      interdependent_cost = WEIGHT*(fcp_gamma)/2*(a'*d_j).^2;  
+      
+      hPlot(i) = plot(t,independent_cost  + interdependent_cost, lines{i}, 'linewidth', lineWidth,'Color',colors{i});      
       hold on;
     end       
 
     
-    legend(hPlot, strLegends,'Location','best','FontSize', fontLegend,'Orientation','horizontal');
+    legend(strLegends, 'Location','best','FontSize', fontLegend,'Orientation','vertical');
     xlim([0, X_LIM]);
     xlabel('Time (sec)','fontname', 'Arial','fontsize', fontAxis);
-    ylabel('global','fontname', 'Arial','fontsize', fontAxis);    
+    ylabel('total cost (USD/sec)','fontname', 'Arial','fontsize', fontAxis);    
     set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);
     
     if is_printed
       figIdx=figIdx +1;
-      fileNames{figIdx} = 'global_cost';
+      fileNames{figIdx} = 'cost';
       epsFile = [ LOCAL_FIG fileNames{figIdx} '.eps'];
         print ('-depsc', epsFile);
     end
