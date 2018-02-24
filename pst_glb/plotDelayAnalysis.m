@@ -52,17 +52,21 @@ end
 %%
 if PLOTS(1)
   TIME_STEP = 0.1;
-  range = [1 2 4 6];
+  figSize = figTwoThirdCol;
 %   DELAYS =       [0     0.1   0.2   1.0     3.0   5.0];
-  DELAYS =       [0     0.1   0.2   1.0     3.0   5.0];
-  best_lambdas = [0.002 0.002 0.001 0.0002  0.0001  0.0001];   
-  
-  DELAYS = DELAYS(range);
-  best_lambdas = best_lambdas(range);
+%   best_lambdas = [0.002 0.002 0.001 0.0002  0.0001  0.0001];   
+%   DELAYS =       [0     0.1   0.2   1.0];
+%   best_lambdas = [0.002 0.002 0.001 0.0002];     
+   DELAYS =       [0     0.5   1.0];
+   best_lambdas = [0.002 0.0005 0.0002];     
   
   legendStr = cell(1,length(DELAYS));
   for i=1:length(DELAYS)
-    legendStr{i} = sprintf('\\Delta=%s',num2str(DELAYS(i)));
+    if DELAYS(i)==0 
+      legendStr{i} = sprintf('No delay',num2str(DELAYS(i)));
+    else
+      legendStr{i} = sprintf('\\Delta=%s second', num2str(DELAYS(i)));
+    end
   end
   for iDelay = 1:length(DELAYS)    
     fileToLoad = sprintf('%sGenLoss_proposed_0.4_%s_75_0.16_%s_%s.mat', folder, num2str(TIME_STEP), ...
@@ -79,7 +83,6 @@ if PLOTS(1)
   ylabel('Frequency (Hz)','fontname', 'Arial','fontsize',fontAxis);
   ylim([59.96 60]);
   xlim([0 100]);
-  figSize = figOneCol;
   set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize); 
   
   if is_printed

@@ -5,7 +5,7 @@ figure_settings;
 warning off;
 %%
 
-PLOTS = [false true true false false false false];
+PLOTS = [true true true false false false false];
 
 X_LIM = 50;
 
@@ -21,7 +21,7 @@ dataFiles = {
     ['GenLoss_proposed_0.4_0.01_75_0.16_0_0.001'];   
     ['GenLoss_NONE_0.4_0.01_75_0.16_0_0.001']; 
     };  
-optimalFile = ['GenLoss_optimal'];
+optimalFile = ['GenLoss_optimal_0.4'];
 
   
 figIdx = 0;
@@ -35,7 +35,7 @@ if PLOTS(1)
     for i=1:length(dataFiles)%-1
       load([folder dataFiles{i} '.mat']);
       hPlot(i) = plot(t,load_freq(1,:)*60, lines{i}, 'linewidth', lineWidth,'Color',colors{i});  hold on;
-      plot(t,load_freq*60, lines{i}, 'linewidth',lineWidth,'Color',colors{i});
+%       plot(t,load_freq*60, lines{i}, 'linewidth',lineWidth,'Color',colors{i});
       hold on;
     end
     legend(hPlot, strLegends, 'Location','best','FontSize', fontLegend,'Orientation','vertical');

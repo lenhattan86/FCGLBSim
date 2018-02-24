@@ -27,19 +27,19 @@ if useLocalParameters
 %   RUNNING_MODE = RunningMode.LoadChange;
   RUNNING_MODE = RunningMode.GenLoss;
 %   RUNNING_MODE = RunningMode.None;
-%  METHOD = Method.proposed;
+ METHOD = Method.proposed;
 %    METHOD = Method.OLC;
-  METHOD = Method.NONE;
+%   METHOD = Method.NONE;
   INCIDENT_START = 5; % seconds
-  DELAY = 0.0; 
-  TIME_STEP = 0.01; % default 0.01
+  DELAY = 0.5; 
+  TIME_STEP = 0.1; % default 0.01
   FLEX = 0.4;
   IS_PLOT = true;
   WEIGHT = 75; %$/MW-Hz
   GAMMA = 0.16; %$/MW^2
   %GAMMA = 0.08; %$/MW^2
   % fcp_lambda  = 0.001; % 0.001
-  fcp_lambda  = 0.001;
+  fcp_lambda  = 0.0005;
   isSave = true;
 else
   IS_PLOT = false;

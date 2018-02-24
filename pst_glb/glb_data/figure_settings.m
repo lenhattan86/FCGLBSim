@@ -8,7 +8,7 @@ PS_CMD_FORMAT='ps2pdf -dEmbedAllFonts#true -dSubsetFonts#true -dEPSCrop#false -d
 %% String
 strProposed = 'proposed';
 strOLC = 'OLC';
-strOptimal = 'Optimal';
+strOptimal = 'Lower bound';
 strSubOptimal = 'suboptimal';
 strFCOptimal = 'opt';
 

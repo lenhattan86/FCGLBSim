@@ -11,13 +11,8 @@ X_LIM = 35;
 % folder = 'output01/';
 folder = 'output/';
 
-GAMMA = 0.16;
-DELAY = 0.01;
-FLEX = 0.4;
-WEIGHT = 75;
-extra = ['_' num2str(FLEX) '_' num2str(DELAY) '_' num2str(WEIGHT) '_' num2str(GAMMA)];
-  
-optimalFile = ['GenLoss_optimal' extra];
+ 
+optimalFile = ['GenLoss_optimal_0.4'];
   
 figIdx = 0;
 strLegends = {strOLC, strProposed, strOptimal};
@@ -25,8 +20,8 @@ lines = { lineOLC, lineProposed, lineOptimal};
 colors = {colorOLC, colorProposed, colorOptimal};
 
 dataFiles = {
-  ['GenLoss_OLC' extra];
-  ['GenLoss_proposed' extra];   
+  ['GenLoss_OLC_0.4_0.01_75_0.16_0_0.001'];
+  ['GenLoss_proposed_0.4_0.01_75_0.16_0_0.001'];   
 };
 
 %%
@@ -40,9 +35,9 @@ if PLOTS(1)
       costs(iFile,1) = WEIGHT*sum((c/2).* (d_j.^2)/2);  
       costs(iFile,2) = WEIGHT*(fcp_gamma)/2*(sum(a.*d_j)).^2;  
     end
-    %sum(disturbance_size)
+    %sum(disturbance_size)    
     load([folder optimalFile '.mat']);
-    d_j = controlled_load(:,length(controlled_load(1,:)))
+    d_j = control_d;
     costs(iFile+1,1) = WEIGHT*sum((c/2).* (d_j.^2)/2);   
     costs(iFile+1,2) = WEIGHT*(fcp_gamma)/2*(sum(a.*d_j)).^2;   
     sum(disturbance_size)
