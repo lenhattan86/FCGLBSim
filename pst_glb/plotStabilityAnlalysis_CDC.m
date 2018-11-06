@@ -18,11 +18,10 @@ WEIGHT = 75;
 % extra = ['_' num2str(FLEX) '_' num2str(DELAY) '_' num2str(WEIGHT) '_' num2str(GAMMA)];
 dataFiles = {
     ['GenLoss_OLC_0.4_0.01_75_0.16_0_0.001'];
-    ['GenLoss_proposed_0.4_0.01_75_0.16_0_0.001'];   
-    ['GenLoss_NONE_0.4_0.01_75_0.16_0_0.001']; 
-    };  
+    ['GenLoss_proposed_0.4_0.01_75_0.16_0_0.001'];
+    ['GenLoss_NONE_0.4_0.01_75_0.16_0_0.001'];
+    };
 optimalFile = ['GenLoss_optimal_0.4'];
-
   
 figIdx = 0;
   strLegends = {strOLC, strProposed, strNone, strOptimal};
