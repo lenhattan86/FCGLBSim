@@ -8,8 +8,8 @@ global RUNNING_MODE METHOD INCIDENT_START DELAY FLEX END_TIME WEIGHT
 FLEX = 0.5;
 WEIGHT = 1;
 END_TIME = 35;
-%METHOD = Method.optimal;
- METHOD = Method.OLC;
+METHOD = Method.optimal;
+% METHOD = Method.OLC;
 RUNNING_MODE  = RunningMode.Motivation
 % common_setttings
 
@@ -26,7 +26,8 @@ fcp_alpha = 1;
 a = [0.9 0.5];
 c = [1 1];
 b = -28; % b = sum(a) * DC_DEMAND.
-OLC_capacity = [-10 10];
+%OLC_capacity = [-10 10];
+OLC_capacity = [-20 20];
 disturbance = 10;
 
 for i = 1:length(GAMMA_ARRAY)  
