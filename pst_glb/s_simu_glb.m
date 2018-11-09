@@ -30,8 +30,8 @@ if useLocalParameters
 %  METHOD = Method.proposed;
 %    METHOD = Method.OLC;
 %   METHOD = Method.NONE;
-%     METHOD = Method.proposed_dc;
-    METHOD = Method.dc;
+    METHOD = Method.proposed_dc;
+%     METHOD = Method.dc;
   INCIDENT_START = 1; % seconds
   DELAY = 0.01; 
   TIME_STEP = 0.01; % default 0.01

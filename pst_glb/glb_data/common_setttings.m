@@ -13,12 +13,13 @@ if data(1)
     pmech_max = 0.2500;
 %     disturbance_size = 1*[1, 1 , 1];    sumOfD_j =  0.0;     % in pu
 %     disturbance_bus = [ 4, 8, 20];     % buses % for datane_glb
-    disturbance_size = 50*[1]; sumOfD_j = 0.0;     % 50 MW
+    disturbance_size = 1000*[1]; sumOfD_j = 0.0;     % 1 GW
+%    disturbance_size = 50*[1]; sumOfD_j = 0.0;     % 50 MW in CDC and TCNS Submission #1
 %     disturbance_bus = [4];     % buses % for datane_glb    
     disturbance_bus = [39];     % buses % for datane_glb
     num_generators = 10; %10
     disturbance_gen_bus = [39]; %39
-    control_gen_bus = [30];
+    control_gen_bus = [30:38];
 elseif data(2)
     dfile= 'data16m_glb.m'; 
     pmech_max = 0.8333;
@@ -198,6 +199,8 @@ tg_con = [...
     1  9  1  25.0  1.0  0.1  0.5 0.0 1.25 5.0; 
     1  10  1  25.0  1.0  0.1  0.5 0.0 1.25 5.0;
 ]; 
+
+tg_con(:,4) = 20*ones(size(tg_con(:,4)));
 
 % tg_con(:,4) = 0;    %redesign governor control at mtg_sig.m
 tg_con(:,5) = generator_setpoint_macpu*(1+generator_capacity_factor);
