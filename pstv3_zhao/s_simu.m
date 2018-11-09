@@ -1024,7 +1024,7 @@ et = toc;
 ets = num2str(et);
 disp(['elapsed time = ' ets 's'])
 
-flag = 0;
+flag = 1;
 while(flag == 0)
    disp('You can examine the system response')
    disp('Type 1 to see all machine angles in 3D')
@@ -1134,6 +1134,11 @@ v_dcc= v_dcc(:,1:length(t_dc));
 di_dci= di_dci(:,1:length(t_dc));
 di_dcr=di_dcr(:,1:length(t_dc));
 
+% close all;
+% figure
+% plot(tg_sig');
+% return;
+
 % tidy workspace
 clear B H_sum IHT  R  SHT   VLT          
 clear V_rgf V_rgpf1 V_rgpf2 V_rgprf V_rncf V_rncpf1 V_rncpf2 V_rncprf Vdc_ref      
@@ -1170,3 +1175,5 @@ clear tapi tapr tcsc_con tcsc_dc tcsct_idx  tcsvf_idx tg_con tg_idx tg_pot
 clear tg_sig tgh_idx timestep tload tmax tmaxi tmaxr tmin tmini tminr        
 clear tot_states tstep tstepi tstepr tswitch vdig vdmot vnc vqig vqmot ydcrmn ydcrmx  
 clear z z1 z_dpw z_pss z_tg zdc zdcl ze zig zm 
+
+plotresult;

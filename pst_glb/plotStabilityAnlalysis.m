@@ -34,8 +34,9 @@ if PLOTS(1)
     figSize = figTwoThirdCol;
     for i=1:length(dataFiles)%-1
       load([folder dataFiles{i} '.mat']);
-      hPlot(i) = plot(t,load_freq(1,:)*60, lines{i}, 'linewidth', lineWidth,'Color',colors{i});  hold on;
-      plot(t,load_freq*60, lines{i}, 'linewidth',lineWidth,'Color',colors{i});
+      len = min(length(t), length(load_freq(1,:)));
+      hPlot(i) = plot(t(1:len),load_freq(1,1:len)*60, lines{i}, 'linewidth', lineWidth,'Color',colors{i});  hold on;
+      plot(t(1:len),load_freq(:,1:len)*60, lines{i}, 'linewidth',lineWidth,'Color',colors{i});
       hold on;
     end
     legend(hPlot, strLegends, 'Location','best','FontSize', fontLegend,'Orientation','vertical');
@@ -61,8 +62,9 @@ if PLOTS(1)
       fileToLoad = [folder dataFiles{i} '.mat']
       if(exist(fileToLoad,'file'))
           load(fileToLoad);
-          hPlot(i) = plot(t,load_freq(1,:)*60, lines{i}, 'linewidth', lineWidth,'Color',colors{i});  hold on;
-          plot(t,load_freq*60, lines{i}, 'linewidth',lineWidth,'Color',colors{i});
+          len = min(length(t), length(load_freq(1,:)));
+          hPlot(i) = plot(t(1:len),load_freq(1,(1:len))*60, lines{i}, 'linewidth', lineWidth,'Color',colors{i});  hold on;
+          plot(t(1:len),load_freq(:,(1:len))*60, lines{i}, 'linewidth',lineWidth,'Color',colors{i});
           hold on;
       end
     end

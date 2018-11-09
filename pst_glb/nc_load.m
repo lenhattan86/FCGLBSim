@@ -218,11 +218,9 @@ if ~isempty(load_con)
             curr_mis(ldc_idx) = curr_mis(ldc_idx) - i_ac;
          end
          if count > 30
-            %if norm(curr_mis,'inf') > 1e-3 % workaround: make this threshold
-               disp('NC_LOAD: Newton algorithm not converged in 30 iterations')
-               fprintf('current mismatch is %g %g \n', curr_mis, norm(curr_mis,'inf')) 
-               error('executuion terminated')
-            %end
+            disp('NC_LOAD: Newton algorithm not converged in 30 iterations')
+            fprintf('current mismatch is %g \n', curr_mis) 
+            error('executuion terminated')
          end
       end
    end

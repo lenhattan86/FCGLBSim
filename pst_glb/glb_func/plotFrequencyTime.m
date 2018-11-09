@@ -22,7 +22,28 @@ function [ success ] = plotFrequencyTime( matFile, isPrintted)
       epsFile = [ LOCAL_FIG 'test_freq' '.eps'];
         print ('-depsc', epsFile);
     end
+    
+    figure
+    %h3 = plot(t,load_freq(1,:)*60, 'b-','LineWidth',lineWidth);  hold on;
+    %plot(t,load_freq*60,'b-', 'LineWidth',lineWidth);
+    plot(t,mac_spd*60, 'LineWidth',lineWidth);
+    %legend([h3], {'frequencies of load buses'});
+    xlabel('Time (sec)','fontname', 'Arial','fontsize',fontAxis);
+    ylabel('mac speed (Hz)','fontname', 'Arial','fontsize',fontAxis)
+    
+%     ylim([59.4 60]);
+    
+    figSize = figOneCol;
+    set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);
 
+    if isPrintted
+      epsFile = [ LOCAL_FIG 'test_mac_spd' '.eps'];
+        print ('-depsc', epsFile);
+    end
+
+    return
+    
+    
     figure 
     temp = mu(1:length(t));
 %     muIds = temp~=0;

@@ -145,7 +145,7 @@ exc_con =[
 
 sw_con = [...
 0    0    0    0    0    0    0.01;%sets intitial time step
-0.1  3    4    0    0    0    0.01; %apply three phase fault at bus 3 line 3-4
+0.1  3    4    0    0    6    0.01; %apply three phase fault at bus 3 line 3-4
 0.15 0    0    0    0    0    0.01; %clear fault at bus 3
 0.18 0    0    0    0    0    0.01; %clear remote end
 0.50 0    0    0    0    0    0.02; % increase time step 

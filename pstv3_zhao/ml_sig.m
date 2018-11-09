@@ -44,16 +44,20 @@ if n_lmod>0
    OLCstep = OLCtime/timestep;
    %OLCstep=1;     %step used for discrete time control 
    lmod_sig(:,k)=0;
-   if t>0.5
-     lmod_sig(disturbance_mod,k)=disturbance_size;  %step increase of load at some of the buses
+   if false
+       if t>0.5
+         lmod_sig(disturbance_mod,k)=disturbance_size;  %step increase of load at some of the buses
+       end
+   % load control:
    end
-   
-   if k>=OLCstep+1 && mod(k-1,OLCstep)==0
-       temp_delta_theta=angle(bus_v(OLC_bus,k))-angle(bus_v(OLC_bus,k-OLCstep));
-       controlled_load=max(min(OLC_gain.*((temp_delta_theta.*(abs(temp_delta_theta)<=1.9*pi)+...
-           (temp_delta_theta-2*pi).*(temp_delta_theta>1.9*pi)+...
-           (temp_delta_theta+2*pi).*(temp_delta_theta<-1.9*pi))/OLCtime/(120*pi)),OLC_capacity(:,2)),OLC_capacity(:,1));    %frequency-pu
+   if false
+       if k>=OLCstep+1 && mod(k-1,OLCstep)==0
+           temp_delta_theta=angle(bus_v(OLC_bus,k))-angle(bus_v(OLC_bus,k-OLCstep));
+           controlled_load=max(min(OLC_gain.*((temp_delta_theta.*(abs(temp_delta_theta)<=1.9*pi)+...
+               (temp_delta_theta-2*pi).*(temp_delta_theta>1.9*pi)+...
+               (temp_delta_theta+2*pi).*(temp_delta_theta<-1.9*pi))/OLCtime/(120*pi)),OLC_capacity(:,2)),OLC_capacity(:,1));    %frequency-pu
+       end
+      lmod_sig(OLC_mod,k)= lmod_sig(OLC_mod,k)+ controlled_load;
    end
-  lmod_sig(OLC_mod,k)= lmod_sig(OLC_mod,k)+ controlled_load;
 end;
 %****************************************************************

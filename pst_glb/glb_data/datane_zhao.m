@@ -151,7 +151,7 @@ sw_con = [...
 0.18 0    0    0    0    0    0.01; %clear remote end
 0.50 0    0    0    0    0    0.02; % increase time step 
 1.0  0    0    0    0    0    0.02; % increase time step
-15.0  0    0    0    0    0    0]; % end simulation
+30.0  0    0    0    0    0    0]; % end simulation
 
 ibus_con = zeros(length(mac_con(:,1)),1);
 %ibus_con(10) = 1;

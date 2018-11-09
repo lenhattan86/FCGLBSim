@@ -4,7 +4,9 @@
 %
 % Purpose: Define global variables for power system 
 %          simulation.
+
 %
+
 
 % (c) Copyright 1991-1999 Joe H. Chow/Cherry Tree Scientific Software
 %     All Rights Reserved
@@ -158,6 +160,8 @@ global di_dcr  di_dci  dv_dcc
 global v_conr dv_conr  
 %inverter
 global v_coni dv_coni
+
+
 
 % simulation control
 global sw_con  scr_con

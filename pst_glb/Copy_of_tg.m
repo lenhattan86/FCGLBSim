@@ -96,7 +96,6 @@ if flag == 0; % initialization
          eps = pmech(n,1) - tg_con(tg_idx,5); zero = 10^(-4);
          maxlmt = find(eps>zero);
          if ~isempty(maxlmt)
-            disp(' pmech excedes maximum limit')
             n(maxlmt)
             error(' pmech excedes maximum limit')
          end

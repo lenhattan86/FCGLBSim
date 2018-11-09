@@ -23,16 +23,18 @@ addpath('glb_classes');
 % mode
 
 if useLocalParameters
-  END_TIME = 65; %CDC: 65
+  END_TIME = 30; %CDC: 65
 %   RUNNING_MODE = RunningMode.LoadChange;
   RUNNING_MODE = RunningMode.GenLoss;
 %   RUNNING_MODE = RunningMode.None;
- METHOD = Method.proposed;
+%  METHOD = Method.proposed;
 %    METHOD = Method.OLC;
 %   METHOD = Method.NONE;
-  INCIDENT_START = 5; % seconds
-  DELAY = 0.5; 
-  TIME_STEP = 0.1; % default 0.01
+%     METHOD = Method.proposed_dc;
+    METHOD = Method.dc;
+  INCIDENT_START = 1; % seconds
+  DELAY = 0.01; 
+  TIME_STEP = 0.01; % default 0.01
   FLEX = 0.4;
   IS_PLOT = true;
   WEIGHT = 75; %$/MW-Hz
@@ -411,7 +413,7 @@ smpexc(0,1,bus,flag);
 smppi(0,1,bus,flag);
 exc_st3(0,1,bus,flag);
 exc_dc12(0,1,bus,flag);
-tg(0,1,bus,flag); 
+tg(0,1,bus,flag);
 tg_hydro(0,1,bus,flag);
 
 % initialize svc damping controls
@@ -1137,6 +1139,10 @@ v_dcc= v_dcc(:,1:length(t_dc));
 di_dci= di_dci(:,1:length(t_dc));
 di_dcr=di_dcr(:,1:length(t_dc));
 
+% close all;
+% figure;
+% plot(tg_sig')
+% return;
 % tidy workspace
 clear B H_sum IHT  R  SHT   VLT          
 clear V_rgf V_rgpf1 V_rgpf2 V_rgprf V_rncf V_rncpf1 V_rncpf2 V_rncprf Vdc_ref      
@@ -1182,7 +1188,7 @@ strScenario
 temp = 'output/'; mkdir(temp);
 matFile = [temp matFile];
 if isSave
-  save(matFile, 'load_freq', 'controlled_load', 'fcp_alpha', 'fcp_gamma','a','c','t', ...
+  save(matFile, 'mac_spd', 'load_freq', 'controlled_load', 'fcp_alpha', 'fcp_gamma','a','c','t', ...
     'GAMMA', 'TIME_STEP','DELAY','FLEX','WEIGHT','mu','INCIDENT_START','OLC_bus','disturbance_mod','disturbance_size','OLC_capacity',...
     'BASE_POWER','NEW_ENG_BASE');
 end

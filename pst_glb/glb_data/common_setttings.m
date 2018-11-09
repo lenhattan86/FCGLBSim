@@ -1,5 +1,5 @@
 global RUNNING_MODE METHOD INCIDENT_START
-global gamma a c Phi mu fcp_lambda fcp_alpha sumOfD_j disturbance_gen_mod mac_scale fcp_beta fcp_gamma NEW_ENG_BASE 
+global gamma a c Phi mu fcp_lambda fcp_alpha sumOfD_j disturbance_gen_mod mac_scale fcp_beta fcp_gamma NEW_ENG_BASE control_gen_mod
 global control_d TIME_STEP DELAY
 
 
@@ -8,16 +8,17 @@ DEBUG = false;
 
 data = [true, false, false];
 if data(1)
-    dfile = 'datane_glb.m';% New England
+%     dfile = 'datane_glb.m';% New England
+    dfile = 'datane.m';% New England
     pmech_max = 0.2500;
 %     disturbance_size = 1*[1, 1 , 1];    sumOfD_j =  0.0;     % in pu
 %     disturbance_bus = [ 4, 8, 20];     % buses % for datane_glb
     disturbance_size = 50*[1]; sumOfD_j = 0.0;     % 50 MW
 %     disturbance_bus = [4];     % buses % for datane_glb    
     disturbance_bus = [39];     % buses % for datane_glb
-    num_generators = 10;
-    disturbance_gen_bus = [39];
-    remove_governor = [1:9];
+    num_generators = 10; %10
+    disturbance_gen_bus = [39]; %39
+    control_gen_bus = [30];
 elseif data(2)
     dfile= 'data16m_glb.m'; 
     pmech_max = 0.8333;
@@ -67,14 +68,13 @@ generator_setpoint = bus(generator_bus(1:num_generators), 4);
 generator_base = mac_con(1:num_generators,3); 
 generator_setpoint_macpu = BASE_POWER*generator_setpoint./generator_base;
 mac_scale = generator_base/BASE_POWER;
-% generator_setpoint_macpu = generator_setpoint;
 
-% governor_gain = 50*generator_setpoint_macpu;
-% generator_capacity = [-generator_setpoint_macpu*generator_capacity_factor, generator_capacity_factor*generator_setpoint_macpu];
+governor_gain = 25*generator_setpoint_macpu;
+generator_capacity = [-generator_setpoint_macpu*generator_capacity_factor, generator_capacity_factor*generator_setpoint_macpu];
 
 
 % remaining_governor = [1; 3; 5; 7;];
-% remove_governor = [];
+remove_governor = [];
 %remaining_governor = transpose(1:1:10);
 
 % governor_gain(remove_governor)=0;
@@ -139,6 +139,11 @@ for i=1:length(gen_bus_index)
        disturbance_gen_mod(j) = i;
     end
   end
+  for j=1:length(control_gen_bus)
+    if control_gen_bus(j) == gen_bus_index(i)
+       control_gen_mod(j) = i;
+    end
+  end
 end
 %OLC_mod(disturbance_mod)=[];
 %OLC_bus = lmod_con(OLC_mod,2);
@@ -171,7 +176,7 @@ OLC_gain = 25* OLC_setpoint ; % uniform cost function 1/2*k*p^2, but for load ne
 % 1 turbine model number (=1)
 % 2 machine number
 % 3 speed set point wf pu
-% 4 steady state gain 1/R pu
+% 4 steady state gain 1/R pu %% TODO: reduce impact from Power generator.
 % 5 maximum power order Tmax pu on generator base
 % 6 servo time constant Ts sec
 % 7 governor time constant Tc sec
@@ -180,13 +185,25 @@ OLC_gain = 25* OLC_setpoint ; % uniform cost function 1/2*k*p^2, but for load ne
 % 10 reheater time constant T5 sec
 
 
-tg_con = ones(num_generators,1)* [ 1  1  1  25.0  1.0  0.1  0.5 0.0 1.25 5.0]; 
-tg_con(:,4) = 0;    %redesign governor control at mtg_sig.m
+% tg_con = ones(num_generators,1)* [ 1  1  1  25.0  1.0  0.1  0.5 0.0 1.25 5.0]; % old
+tg_con = [... 
+    1  1  1  25.0  1.0  0.1  0.5 0.0 1.25 5.0; 
+    1  2  1  25.0  1.0  0.1  0.5 0.0 1.25 5.0; 
+    1  3  1  25.0  1.0  0.1  0.5 0.0 1.25 5.0; 
+    1  4  1  25.0  1.0  0.1  0.5 0.0 1.25 5.0;
+    1  5  1  25.0  1.0  0.1  0.5 0.0 1.25 5.0; 
+    1  6  1  25.0  1.0  0.1  0.5 0.0 1.25 5.0; 
+    1  7  1  25.0  1.0  0.1  0.5 0.0 1.25 5.0; 
+    1  8  1  25.0  1.0  0.1  0.5 0.0 1.25 5.0;
+    1  9  1  25.0  1.0  0.1  0.5 0.0 1.25 5.0; 
+    1  10  1  25.0  1.0  0.1  0.5 0.0 1.25 5.0;
+]; 
+
+% tg_con(:,4) = 0;    %redesign governor control at mtg_sig.m
 tg_con(:,5) = generator_setpoint_macpu*(1+generator_capacity_factor);
-% tg_con(:,5) = generator_setpoint_macpu;
-if (~isempty(remove_governor))
-   tg_con(remove_governor,4) = 0;
-end;
+% if (~isempty(remove_governor))
+%    tg_con(remove_governor,4) = 0;
+% end;
 
 Q_glb = zeros(1,1);
 N = length(OLC_bus);

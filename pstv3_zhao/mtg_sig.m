@@ -11,8 +11,15 @@ if n_tg~=0|n_tgh~=0
   if t<=0.0
      tg_sig(:,k) = zeros(n_tg+n_tgh,1);
   else
-     tg_sig(:,k) = max(min(-governor_gain.*(mac_spd(:,k)-1),generator_capacity(:,2)),generator_capacity(:,1));  
-     tg_sig(remove_governor,k) = 0;
+     tg_sig(:,k) = zeros(n_tg+n_tgh,1); 
+     if true
+        tg_sig(:,k) = max(min(-governor_gain.*(mac_spd(:,k)-1),generator_capacity(:,2)),generator_capacity(:,1));  
+%      tg_sig(remove_governor,k) = 0;
+     end
+     
+     if t>1 % power losss
+        tg_sig(1,k)=-[1];  %step increase of load at some of the buses
+     end 
   end
 end
 return

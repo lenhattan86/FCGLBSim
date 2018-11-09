@@ -10,15 +10,15 @@ figSize = [0.0 0 5.0 3.0];
 extra='_negative2';
 figIdx = 0;
 folder = 'output/';
-filename = 'GenLoss_proposed_0.4_0.01_75_0.16_0_0.001.mat';
+filename = 'GenLoss_proposed_0.4_0.01_75_0.16_0.01_0.0005.mat';
 filePath = [folder filename];
 
 %% plot the frequencies of generators
-plots = [false true true true];
+plots = [true true false false];
 
 if plots(1)
     figure; 
-    load(['output/DGLB' int2str(100*dc_flex) '.mat']);
+    load(filePath);
     h3 = plot(t,mac_spd(1,:)*60,'b--');  hold on;
     plot(t,mac_spd*60,'b--');
     hold on;
@@ -31,7 +31,7 @@ if plots(1)
     % legend([h1 h2 h3 h4], {'PST', 'GLB','DGLB', 'OLC'});
     % legend([h1 h3 h4], {'PST', 'DGLB', 'OLC'});
 %     legend([h3 h4], {'DGLB', 'OLC'});
-    legend([h3], {'DGLB'});
+%     legend([h3], {'DGLB'});
 
     title('Turbine Machine Speed (Hz)','fontname', 'Arial','fontsize',fontAxis);
     xlabel('Time (sec)','fontname', 'Arial','fontsize',fontAxis);
@@ -101,7 +101,7 @@ if plots(3)
     % ylabel('MW','fontname', 'Arial','fontsize',fontAxis);
 
     figure; 
-    load(['output/DGLB' int2str(100*dc_flex) '.mat']);
+    load(filePath);
     h3 = plot(t, d*BASE_POWER);
     legend({'DC 1','DC 2','DC 3','DC 4','DC 5','DC 6'});
 %     ylim([0 DC_CAPACITY*BASE_POWER]);
@@ -120,7 +120,7 @@ if plots(3)
 end
 %% Plot each bus comparing frequency, Q, and power consumption
 if plots(4)
-    load(['output/DGLB' int2str(100*dc_flex) '.mat']);
+    load(filePath);
     k0 = 90; kF = 95;
     %k0 = 135; kF = 145;
     % for dc = 1:6
