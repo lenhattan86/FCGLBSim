@@ -23,16 +23,16 @@ addpath('glb_classes');
 % mode
 
 if useLocalParameters
-  END_TIME = 30; %CDC: 65
+  END_TIME = 65; %CDC: 65
 %   RUNNING_MODE = RunningMode.LoadChange;
   RUNNING_MODE = RunningMode.GenLoss;
 %   RUNNING_MODE = RunningMode.None;
 %  METHOD = Method.proposed;
 %    METHOD = Method.OLC;
 %   METHOD = Method.NONE;
-    METHOD = Method.proposed_dc;
-%     METHOD = Method.dc;
-  INCIDENT_START = 1; % seconds
+%     METHOD = Method.proposed_dc;
+    METHOD = Method.dc;
+  INCIDENT_START = 5; % seconds
   DELAY = 0.01; 
   TIME_STEP = 0.01; % default 0.01
   FLEX = 0.4;
@@ -41,7 +41,7 @@ if useLocalParameters
   GAMMA = 0.16; %$/MW^2
   %GAMMA = 0.08; %$/MW^2
   % fcp_lambda  = 0.001; % 0.001
-  fcp_lambda  = 0.0005;
+  fcp_lambda  = 0.001;
   isSave = true;
 else
   IS_PLOT = false;

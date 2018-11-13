@@ -1,6 +1,7 @@
 clear global; clear; clc; close all; 
 global RUNNING_MODE METHOD INCIDENT_START DELAY FLEX END_TIME WEIGHT TIME_STEP fcp_lambda isSave
 isSave = true;
+% TIME_STEP = 0.01;
 %%
 IS_MULTIPLE_RUN = true;
 addpath('glb_data');
@@ -8,7 +9,7 @@ addpath('glb_func');
 addpath('glb_classes');
 %%
 % runs = [true true true true true true true true];
- runs = [true true true true false false false false false];
+ runs = [true true true false false false false false false false];
 % runs = [false false false false true true true true];
 %runs = [false false false false false false false false]; runs(4) = true;
 %% common
@@ -17,9 +18,8 @@ iRun = 0;
 %% proposed
 iRun = iRun+1;
 if runs(iRun)
-  %
   default_settings;    
-  METHOD = Method.proposed;    
+  METHOD = Method.proposed_dc;    
   s_simu_glb;  
 end
 %% OLC
@@ -27,6 +27,13 @@ iRun = iRun+1;
 if runs(iRun)
   default_settings;  
   METHOD = Method.OLC;
+  s_simu_glb;
+end
+%% Droop control
+iRun = iRun+1;
+if runs(iRun)
+  default_settings;  
+  METHOD = Method.dc;
   s_simu_glb;
 end
 %% NONE

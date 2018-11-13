@@ -13,7 +13,7 @@ function [ success ] = plotFrequencyTime( matFile, isPrintted)
     xlabel('Time (sec)','fontname', 'Arial','fontsize',fontAxis);
     ylabel('Frequency (Hz)','fontname', 'Arial','fontsize',fontAxis)
     
-%     ylim([59.4 60]);
+    ylim([59.8 60]);
     
     figSize = figOneCol;
     set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);
@@ -27,6 +27,7 @@ function [ success ] = plotFrequencyTime( matFile, isPrintted)
     %h3 = plot(t,load_freq(1,:)*60, 'b-','LineWidth',lineWidth);  hold on;
     %plot(t,load_freq*60,'b-', 'LineWidth',lineWidth);
     plot(t,mac_spd*60, 'LineWidth',lineWidth);
+     ylim([59.8 60]);
     %legend([h3], {'frequencies of load buses'});
     xlabel('Time (sec)','fontname', 'Arial','fontsize',fontAxis);
     ylabel('mac speed (Hz)','fontname', 'Arial','fontsize',fontAxis)

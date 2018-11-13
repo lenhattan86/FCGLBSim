@@ -16,17 +16,27 @@ DELAY = 0.01;
 FLEX = 0.4;
 WEIGHT = 75;
 % extra = ['_' num2str(FLEX) '_' num2str(DELAY) '_' num2str(WEIGHT) '_' num2str(GAMMA)];
+% dataFiles = {
+%     ['GenLoss_OLC_0.4_0.01_75_0.16_0_0.001'];
+%     ['GenLoss_proposed_0.4_0.01_75_0.16_0_0.001'];
+%     ['GenLoss_NONE_0.4_0.01_75_0.16_0_0.001'];
+%     };
+% strLegends = {strOLC, strProposed, strNone, strOptimal};
+
+lines = { lineOLC, lineProposed, lineNone, lineOptimal};
+colors = {colorOLC, colorProposed, colorNone, colorOptimal};
+
 dataFiles = {
-    ['GenLoss_OLC_0.4_0.01_75_0.16_0_0.001'];
-    ['GenLoss_proposed_0.4_0.01_75_0.16_0_0.001'];
-    ['GenLoss_NONE_0.4_0.01_75_0.16_0_0.001'];
+    ['GenLoss_OLC_0.4_0.01_75_0.16_0.01_0.001'];
+    ['GenLoss_proposed_dc_0.4_0.01_75_0.16_0.01_0.001'];
+    ['GenLoss_dc_0.4_0.01_75_0.16_0.01_0.001'];
     };
+strLegends = {strOLC, strProposed, 'droop control', strOptimal};
+
 optimalFile = ['GenLoss_optimal_0.4'];
   
 figIdx = 0;
-  strLegends = {strOLC, strProposed, strNone, strOptimal};
-  lines = { lineOLC, lineProposed, lineNone, lineOptimal};
-  colors = {colorOLC, colorProposed, colorNone, colorOptimal};
+
 %%
 if PLOTS(1)
     figure; 
@@ -41,7 +51,7 @@ if PLOTS(1)
     
     xlabel('Time (sec)', 'fontname', 'Arial','fontsize', fontAxis);
     ylabel('Frequency (Hz)','fontname', 'Arial','fontsize', fontAxis);
-    ylim([59.9, 60.0]); 
+%     ylim([59.9, 60.0]); 
     xlim([0, X_LIM]);
     set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);
     
@@ -53,7 +63,7 @@ if PLOTS(1)
     end
 end
 
-if PLOTS(1)
+if false
     figure; 
     figSize = figTwoThirdCol;
     for i=3:length(dataFiles)
@@ -96,7 +106,7 @@ if PLOTS(2)
 %     strLegends = strread(num2str(a),'%s');
 %     legend(hPlot, strLegends,'Location','best','FontSize', fontLegend,'Orientation','horizontal');
 %     legend(strLegends,'Location','best','FontSize', fontLegend-2,'Orientation','horizontal','Right');
-    xlim([0, X_LIM]);
+%     xlim([0, X_LIM]);
     xlabel('Time (sec)','fontname', 'Arial','fontsize', fontAxis);
     ylabel(strPower,'fontname', 'Arial','fontsize', fontAxis);    
     set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);
@@ -286,7 +296,7 @@ return;
 for i=1:length(fileNames)
     fileName = fileNames{i};
     epsFile = [ LOCAL_FIG fileName '.eps'];
-    pdfFile = [ fig_path fileName '.pdf']    
+    pdfFile = [ fig_path fileName '_new' '.pdf']    
     cmd = sprintf(PS_CMD_FORMAT, epsFile, pdfFile);
     status = system(cmd);
 end
