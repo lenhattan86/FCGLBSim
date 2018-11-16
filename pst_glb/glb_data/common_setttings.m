@@ -227,7 +227,6 @@ WEIGHT = WEIGHT*NEW_ENG_BASE/BASE_POWER; %scale from 14 GW to total power of sim
 WEIGHT = WEIGHT*BASE_POWER*SYS_FREQ; %Scaling down to pu for power and frequency
 GAMMA = GAMMA/WEIGHT; %cost in terms of freq dev.
 
-% fcp_lambda  = 0.001; % step size CDC: 0.001
 fcp_gamma  = GAMMA;
 fcp_beta  = WEIGHT;
 mu = zeros(1,END_TIME*100);

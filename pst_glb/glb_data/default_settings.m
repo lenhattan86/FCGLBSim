@@ -6,4 +6,5 @@ FLEX = 0.4;
 END_TIME = 150;
 WEIGHT = 75;
 GAMMA = 0.16;
-% TIME_STEP=0.01;
+TIME_STEP=0.01;
+fcp_lambda=0.001;
