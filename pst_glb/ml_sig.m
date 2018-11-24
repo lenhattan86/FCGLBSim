@@ -15,7 +15,6 @@ global gamma a c Phi mu fcp_lambda fcp_D sumOfD_j fcp_gamma
 global g
 
 control_d = zeros(length(OLC_bus),1);
-changedLoad = 0*(disturbance_size);
 
 if t>INCIDENT_START
     if RUNNING_MODE == RunningMode.LoadChange    
@@ -32,9 +31,6 @@ if METHOD==Method.proposed || METHOD==Method.proposed_dc
       %OLCstep=1;     %step used for discrete time control 
       lmod_sig(:,k)=0;
       
-      if t>INCIDENT_START
-        lmod_sig(disturbance_mod,k)=changedLoad;  %step increase of load at some of the buses
-      end
       
       if k>1
         temp_delta_theta=angle(bus_v(OLC_bus,k))-angle(bus_v(OLC_bus,k-1));
@@ -180,9 +176,9 @@ elseif METHOD == Method.OLC
       delay_step = DELAY/timestep;
       %OLCstep=1;     %step used for discrete time control 
       lmod_sig(:,k)=0;
-      if t>INCIDENT_START+timestep
-      lmod_sig(disturbance_mod,k)=changedLoad;  %step increase of load at some of the buses
-      end
+%       if t>INCIDENT_START+timestep
+%       lmod_sig(disturbance_mod,k)=changedLoad;  %step increase of load at some of the buses
+%       end
 
       %if k>=OLCstep+1 && mod(k-1,OLCstep)==0
       if k >1
@@ -218,9 +214,9 @@ else %% METHOD == Method.NONE
     
     lmod_sig(:,k)=0;
     
-    if t>INCIDENT_START
-      lmod_sig(disturbance_mod,k)=changedLoad;  %step increase of load at some of the buses
-    end
+%     if t>INCIDENT_START
+%       lmod_sig(disturbance_mod,k)=changedLoad;  %step increase of load at some of the buses
+%     end
       
     if k>=OLCstep+1 && mod(k-1,OLCstep)==0
         temp_delta_theta=angle(bus_v(OLC_bus,k))-angle(bus_v(OLC_bus,k-OLCstep));

@@ -1,6 +1,7 @@
 clear; close all; clc; clear global;
 addpath('glb_data');
 addpath('glb_func');
+addpath('glb_classes');
 figure_settings;
 warning off;
 %%
@@ -18,15 +19,24 @@ figIdx = 0;
 strLegends = {strOLC, strProposed, strOptimal};
 lines = { lineOLC, lineProposed, lineOptimal};
 colors = {colorOLC, colorProposed, colorOptimal};
+colorBreakDown = {colorOLC, colorProposed, colorOptimal};
+
+default_settings;
+extra = ['_' num2str(FLEX) '_' num2str(TIME_STEP) '_' num2str(WEIGHT) '_' ...
+        num2str(GAMMA) '_' num2str(DELAY) '_' num2str(fcp_lambda) '_' num2str(POWER_LOSS)];
 
 dataFiles = {
-  ['GenLoss_OLC_0.4_0.01_75_0.16_0_0.001'];
-  ['GenLoss_proposed_0.4_0.01_75_0.16_0_0.001'];   
+  ['GenLoss_OLC' extra];
+  ['GenLoss_proposed_dc' extra];   
 };
 
 %%
+figIdx = 0;
 if PLOTS(1)
-    figure; 
+    figIdx=figIdx +1;
+    figures{figIdx} = figure; 
+    fileNames{figIdx} = 'cost';
+    
     figSize = figTwoThirdCol;
     
     for iFile=1:length(dataFiles)
@@ -40,17 +50,17 @@ if PLOTS(1)
     d_j = control_d;
     costs(iFile+1,1) = WEIGHT*sum((c/2).* (d_j.^2)/2);   
     costs(iFile+1,2) = WEIGHT*(fcp_gamma)/2*(sum(a.*d_j)).^2;   
-    sum(disturbance_size)
+
     
     %costs = costs*(NEW_ENG_BASE^2);
-    
+    strLegends = {strOLC, strProposed, strOptimal};
     hBar = bar(costs, 0.2, 'stacked');
     set(gca,'XTickLabel', strLegends,'FontSize',fontAxis);
     hold on;
-    colorBreakDown = {colorLocal, colorGlobal};
-    for i=1:length(hBar)
-       hBar(i).FaceColor = colorBreakDown{i};
-    end
+    
+%     for i=1:length(hBar)
+%        hBar(i).FaceColor = colorBreakDown{i};
+%     end
     
     legend(hBar, {strLocalCost,strGlobalCost},'Location','best','FontSize', fontLegend,'Orientation','horizontal');
     xlim([0.5, 3.5]);   
@@ -58,17 +68,15 @@ if PLOTS(1)
     ylabel(strTotalCost,'fontname', fontName,'fontsize', fontAxis);    
     set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);
     
-    if is_printed
-      figIdx=figIdx +1;
-      fileNames{figIdx} = 'cost';
-      epsFile = [ LOCAL_FIG fileNames{figIdx} '.eps'];
-        print ('-depsc', epsFile);
-    end
+
 end
 
 %%
 if PLOTS(2)
-    figure; 
+    figIdx=figIdx +1;
+    figures{figIdx} = figure; 
+    fileNames{figIdx} = 'breakdown_cost';
+    
     figSize = figTwoThirdCol;
     
     for iFile=1:length(dataFiles)
@@ -84,7 +92,7 @@ if PLOTS(2)
 %     set(gca,'XTickLabel', strLegends,'FontSize',fontAxis);
     hold on;
     
-    colorBreakDown = {colorOLC, colorProposed};
+    
     for i=1:length(hBar)
        hBar(i).FaceColor = colorBreakDown{i};
     end
@@ -95,18 +103,15 @@ if PLOTS(2)
     ylabel(strTotalCost,'fontname', fontName,'fontsize', fontAxis);    
     set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);
     
-    if is_printed
-      figIdx=figIdx +1;
-      fileNames{figIdx} = 'breakdown_cost';
-      epsFile = [ LOCAL_FIG fileNames{figIdx} '.eps'];
-        print ('-depsc', epsFile);
-    end
+
 end
 
 %%
 if PLOTS(3)
-
-    figure; 
+    figIdx=figIdx +1;
+    figures{figIdx} = figure; 
+    fileNames{figIdx} = 'load_deviation';
+    
     figSize = figTwoThirdCol;
     
     for iFile=1:length(dataFiles)
@@ -121,23 +126,17 @@ if PLOTS(3)
 %     set(gca,'XTickLabel', strLegends,'FontSize',fontAxis);
     hold on;
     
-        colorBreakDown = {colorOLC, colorProposed};
+    
     for i=1:length(hBar)
        hBar(i).FaceColor = colorBreakDown{i};
     end
     
-    legend(hBar, {strOLC, strProposed},'Location','best','FontSize', fontLegend,'Orientation','horizontal');
+    legend(hBar, {strOLC, strProposed},'Location','northwest','FontSize', fontLegend,'Orientation','horizontal');
     xlim([0.5, length(LOADS(1,:))+0.5]); 
     ylim([min(min(LOADS))*1.3 max(max(LOADS))*1.3]);
     ylabel(strPower,'fontname', fontName,'fontsize', fontAxis);    
     set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);
-    
-    if is_printed
-      figIdx=figIdx +1;
-      fileNames{figIdx} = 'load_deviation';
-      epsFile = [ LOCAL_FIG fileNames{figIdx} '.eps'];
-        print ('-depsc', epsFile);
-    end
+     
 end
 
 %%
@@ -145,9 +144,11 @@ end
 %%
 return;
 %%
-for iFile=1:length(fileNames)
+for iFile=1:length(fileNames)    
+    epsFile = [ LOCAL_FIG fileNames{iFile} '.eps'];
+    print (figures{iFile}, '-depsc', epsFile);
+    
     fileName = fileNames{iFile};
-    epsFile = [ LOCAL_FIG fileName '.eps'];
     pdfFile = [ fig_path fileName '.pdf']    
     cmd = sprintf(PS_CMD_FORMAT, epsFile, pdfFile);
     status = system(cmd);

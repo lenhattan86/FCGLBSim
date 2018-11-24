@@ -87,7 +87,6 @@ ibus_con = []; % ignore infinite buses in transient simulation
 
 test_IEEE_39;
 
-
 % solve for loadflow - loadflow parameter
 %lfs = inputdlg('Do you want to solve loadflow > (y/n)[y] ','s');
 lfs{1} = 'y';

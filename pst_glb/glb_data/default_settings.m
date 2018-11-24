@@ -1,10 +1,11 @@
 RUNNING_MODE = RunningMode.GenLoss;
 METHOD = Method.proposed;
 INCIDENT_START = 5; % seconds
-DELAY = 0.01; % secs
+DELAY = 0; % default 0.01 secs
 FLEX = 0.4;
-END_TIME = 150;
+END_TIME = 100;
 WEIGHT = 75;
 GAMMA = 0.16;
 TIME_STEP=0.01;
-fcp_lambda=0.001;
+fcp_lambda=0.0001; 
+POWER_LOSS=400;

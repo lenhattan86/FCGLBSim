@@ -30,15 +30,16 @@ if n_tg~=0|n_tgh~=0
       %tg_sig(1,k) = -0.01;
       if t>= INCIDENT_START
           % power lost on disturbance_gen_mod
-          tg_sig(disturbance_gen_mod,k) = -changedLoad/mac_scale(disturbance_gen_mod);  
+          tg_sig(disturbance_gen_mod,k) = -changedLoad'./mac_scale(disturbance_gen_mod);  
       end
       
       % Zhao used the following code in his paper: control on control_gen_mod
-      if  METHOD==Method.proposed_dc || METHOD==Method.dc || METHOD==Method.OLC
-          tg_sig(control_gen_mod,k) = ...
-              max(min(-governor_gain(control_gen_mod).*(mac_spd(control_gen_mod,k)-1), ...
-                    generator_capacity(control_gen_mod,2)),generator_capacity(control_gen_mod,1));  
-      end    
+      % Droop control (refer tg_con matrix) is already enabled we don't need the following code.
+%       if  METHOD==Method.proposed_dc || METHOD==Method.dc || METHOD==Method.OLC
+%           tg_sig(control_gen_mod,k) = ...
+%               max(min(-governor_gain(control_gen_mod).*(mac_spd(control_gen_mod,k)-1), ...
+%                     generator_capacity(control_gen_mod,2)),generator_capacity(control_gen_mod,1));  
+%       end    
     end
 end
 return

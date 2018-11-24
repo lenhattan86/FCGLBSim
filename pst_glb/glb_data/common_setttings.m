@@ -1,6 +1,6 @@
 global RUNNING_MODE METHOD INCIDENT_START
 global gamma a c Phi mu fcp_lambda fcp_alpha sumOfD_j disturbance_gen_mod mac_scale fcp_beta fcp_gamma NEW_ENG_BASE control_gen_mod
-global control_d TIME_STEP DELAY
+global control_d TIME_STEP DELAY POWER_LOSS 
 
 
 SYS_FREQ=60;
@@ -8,24 +8,28 @@ DEBUG = false;
 
 data = [true, false, false];
 if data(1)
-%     dfile = 'datane_glb.m';% New England
-    dfile = 'datane.m';% New England
+    dfile = 'datane_glb.m';% New England
+%     dfile = 'datane.m';% New England
     pmech_max = 0.2500;
 %     disturbance_size = 1*[1, 1 , 1];    sumOfD_j =  0.0;     % in pu
 %     disturbance_bus = [ 4, 8, 20];     % buses % for datane_glb
-    disturbance_size = 1000*[1]; sumOfD_j = 0.0;     % 1 GW
+     if(~exist('SINGLE_RUN','var') || SINGLE_RUN)
+         POWER_LOSS = 400;        
+     end
+     disturbance_size = POWER_LOSS*[1]; sumOfD_j = 0.0;     % 1 GW
+     
 %    disturbance_size = 50*[1]; sumOfD_j = 0.0;     % 50 MW in CDC and TCNS Submission #1
 %     disturbance_bus = [4];     % buses % for datane_glb    
-    disturbance_bus = [39];     % buses % for datane_glb
-    num_generators = 10; %10
+    disturbance_bus = [];     % buses % for datane_glb
+    num_generators  = 10; %10
     disturbance_gen_bus = [39]; %39
     control_gen_bus = [30:38];
 elseif data(2)
     dfile= 'data16m_glb.m'; 
     pmech_max = 0.8333;
     disturbance_size = 60*[1, 1 , 1];         % in pu
-    disturbance_bus = [37, 42, 52];     % buses for data16m_glb 
-    num_generators  = 16;
+    disturbance_bus  = [37, 42, 52];     % buses for data16m_glb 
+    num_generators   = 16;
 elseif data(3)
     dfile= 'datanp48_glb.m'; % % NY & 
     pmech_max = 0.8333;

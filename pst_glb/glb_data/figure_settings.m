@@ -3,12 +3,14 @@
 OUTPUT_FOLDER = 'output/';
 LOCAL_FIG = 'figs/';
 %fig_path = 'C:\Users\NhatTan\Dropbox\Papers\FCGLB\FCGLB\cdc_17_paper\images\';
-fig_path = 'figs/';
+fig_path = '/home/tanle/Dropbox/Papers/FCGLB/FCGLB/TCNS_18_submission2/images/';
 PS_CMD_FORMAT='ps2pdf -dEmbedAllFonts#true -dSubsetFonts#true -dEPSCrop#false -dPDFSETTINGS#/prepress %s %s';
 %% String
-strProposed = 'proposed';
-strOLC = 'OLC';
-strOptimal = 'Lower bound';
+% strProposed = 'prop + droop';
+% strOLC = 'OLC + droop';
+strProposed = 'prop+drp';
+strOLC = 'OLC+drp';
+strOptimal = 'low bnd';
 strSubOptimal = 'suboptimal';
 strFCOptimal = 'opt';
 
@@ -22,14 +24,17 @@ strFrequency = 'frequency (Hz)';
 strTime = 'time (seconds)';
 strCost = 'cost';
 
-strTotalCost = 'total cost (USD/sec)';
+% strTotalCost = 'total cost (USD/sec)';
+strTotalCost = 'datacenter costs (USD/sec)';
 
-strGlobalCost = 'interdependent';
-strLocalCost = 'independent';
+strGlobalCost = 'inter';
+strLocalCost = 'ind';
 
-strPower = 'Power (MW)';
+strPower = 'power (MW)';
 
 strGamma = '\gamma';
+
+strDroopControl = 'droop';
 
 %%
 fontSize=10;

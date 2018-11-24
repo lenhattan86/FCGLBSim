@@ -15,7 +15,7 @@ jay = sqrt(-1);
 pst_var % set up global variables
 
 %% Setting parameters by Tan N. Le
-global RUNNING_MODE METHOD INCIDENT_START DELAY FLEX END_TIME WEIGHT NEW_ENG_BASE TIME_STEP fcp_lambda isSave
+global RUNNING_MODE METHOD INCIDENT_START DELAY FLEX END_TIME WEIGHT NEW_ENG_BASE TIME_STEP fcp_lambda isSave POWER_LOSS
 
 addpath('glb_data');
 addpath('glb_func');
@@ -40,16 +40,14 @@ if useLocalParameters
   WEIGHT = 75; %$/MW-Hz
   GAMMA = 0.16; %$/MW^2
   %GAMMA = 0.08; %$/MW^2
-  % fcp_lambda  = 0.001; % 0.001
+  %fcp_lambda  = 0.001; % 0.001
   fcp_lambda  = 0.001;
   isSave = true;
 else
   IS_PLOT = false;
 end
 
-
-
-strScenario = [char(RUNNING_MODE) '_' char(METHOD) '_' num2str(FLEX) '_' num2str(TIME_STEP) '_' num2str(WEIGHT) '_' num2str(GAMMA) '_' num2str(DELAY) '_' num2str(fcp_lambda)];
+strScenario = [char(RUNNING_MODE) '_' char(METHOD) '_' num2str(FLEX) '_' num2str(TIME_STEP) '_' num2str(WEIGHT) '_' num2str(GAMMA) '_' num2str(DELAY) '_' num2str(fcp_lambda) '_' num2str(POWER_LOSS)];
 fprintf('[INFO] Running %s \n', strScenario)
 
 common_setttings
@@ -1192,7 +1190,7 @@ matFile = [temp matFile];
 if isSave
   save(matFile, 'mac_spd', 'load_freq', 'controlled_load', 'fcp_alpha', 'fcp_gamma','a','c','t', ...
     'GAMMA', 'TIME_STEP','DELAY','FLEX','WEIGHT','mu','INCIDENT_START','OLC_bus','disturbance_mod','disturbance_size','OLC_capacity',...
-    'BASE_POWER','NEW_ENG_BASE');
+    'BASE_POWER','NEW_ENG_BASE','pelect','pmech');
 end
 if(IS_PLOT)
   close all;

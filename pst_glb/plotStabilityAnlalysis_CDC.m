@@ -1,21 +1,20 @@
 clear; close all; clc; clear global;
 addpath('glb_data');
 addpath('glb_func');
+addpath('glb_classes');
 figure_settings;
 warning off;
 %%
 
 PLOTS = [true true true false false false false];
 
-X_LIM = 50;
+X_LIM = 30;
 
 % folder = 'output01/';
 folder = 'output/';
-GAMMA = 0.16;
-DELAY = 0.01;
-FLEX = 0.4;
-WEIGHT = 75;
-% extra = ['_' num2str(FLEX) '_' num2str(DELAY) '_' num2str(WEIGHT) '_' num2str(GAMMA)];
+default_settings;
+extra = ['_' num2str(FLEX) '_' num2str(TIME_STEP) '_' num2str(WEIGHT) '_' ...
+        num2str(GAMMA) '_' num2str(DELAY) '_' num2str(fcp_lambda) '_' num2str(POWER_LOSS)];
 % dataFiles = {
 %     ['GenLoss_OLC_0.4_0.01_75_0.16_0_0.001'];
 %     ['GenLoss_proposed_0.4_0.01_75_0.16_0_0.001'];
@@ -27,11 +26,11 @@ lines = { lineOLC, lineProposed, lineNone, lineOptimal};
 colors = {colorOLC, colorProposed, colorNone, colorOptimal};
 
 dataFiles = {
-    ['GenLoss_OLC_0.4_0.01_75_0.16_0.01_0.001'];
-    ['GenLoss_proposed_dc_0.4_0.01_75_0.16_0.01_0.001'];
-    ['GenLoss_dc_0.4_0.01_75_0.16_0.01_0.001'];
+    ['GenLoss_OLC' extra];
+    ['GenLoss_proposed_dc' extra];
+    ['GenLoss_dc' extra];
     };
-strLegends = {strOLC, strProposed, 'droop control', strOptimal};
+strLegends = {strOLC, strProposed, strDroopControl, strOptimal};
 
 optimalFile = ['GenLoss_optimal_0.4'];
   
@@ -39,32 +38,31 @@ figIdx = 0;
 
 %%
 if PLOTS(1)
-    figure; 
+    figIdx=figIdx +1;
+    figures{figIdx} = figure; 
+    fileNames{figIdx} = 'load_freq';
+    
     figSize = figTwoThirdCol;
     for i=1:length(dataFiles)%-1
       load([folder dataFiles{i} '.mat']);
       hPlot(i) = plot(t,load_freq(1,:)*60, lines{i}, 'linewidth', lineWidth,'Color',colors{i});  hold on;
-%       plot(t,load_freq*60, lines{i}, 'linewidth',lineWidth,'Color',colors{i});
+      plot(t,load_freq*60, lines{i}, 'linewidth',1,'Color',colors{i});
       hold on;
     end
-    legend(hPlot, strLegends, 'Location','best','FontSize', fontLegend,'Orientation','vertical');
-    
-    xlabel('Time (sec)', 'fontname', 'Arial','fontsize', fontAxis);
-    ylabel('Frequency (Hz)','fontname', 'Arial','fontsize', fontAxis);
+    legend(hPlot, strLegends, 'Location','northeast','FontSize', fontLegend,'Orientation','vertical');
+    xlabel(strTime, 'fontname', 'Arial','fontsize', fontAxis);
+    ylabel(strFrequency,'fontname', 'Arial','fontsize', fontAxis);
 %     ylim([59.9, 60.0]); 
     xlim([0, X_LIM]);
     set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);
     
-    if is_printed
-      figIdx=figIdx +1;
-      fileNames{figIdx} = 'load_freq';
-      epsFile = [ LOCAL_FIG fileNames{figIdx} '.eps'];
-        print ('-depsc', epsFile);
-    end
 end
 
 if false
-    figure; 
+    figIdx=figIdx +1;
+    figures{figIdx} = figure; 
+    fileNames{figIdx} = 'load_freq_2';
+    
     figSize = figTwoThirdCol;
     for i=3:length(dataFiles)
       fileToLoad = [folder dataFiles{i} '.mat']
@@ -77,22 +75,19 @@ if false
     end
 %     legend(hPlot, strLegends, 'Location','best','FontSize', fontLegend,'Orientation','horizontal');
     
-    xlabel('Time (sec)', 'fontname', 'Arial','fontsize', fontAxis);
-    ylabel('Frequency (Hz)','fontname', 'Arial','fontsize', fontAxis);
+    xlabel(strTime, 'fontname', 'Arial','fontsize', fontAxis);
+    ylabel(strFrequency,'fontname', 'Arial','fontsize', fontAxis);
     % ylim([59.90, 60.0]); 
     xlim([0, X_LIM]);
     set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);
     
-    if is_printed
-      figIdx=figIdx +1;
-      fileNames{figIdx} = 'load_freq_2';
-      epsFile = [ LOCAL_FIG fileNames{figIdx} '.eps'];
-        print ('-depsc', epsFile);
-    end
 end
 %%
 if PLOTS(2) 
-    figure; 
+    figIdx=figIdx +1;
+    figures{figIdx} = figure; 
+    fileNames{figIdx} = 'load';
+    
     figSize = figTwoThirdCol;
     for i=2:length(dataFiles)-1
       load([folder dataFiles{i} '.mat']);
@@ -102,26 +97,24 @@ if PLOTS(2)
       plot(t, controlled_load*NEW_ENG_BASE, '-.','linewidth',lineWidth);
       hold on;
     end
+    xlim([0, X_LIM]);
     a = 1:10 ;
 %     strLegends = strread(num2str(a),'%s');
 %     legend(hPlot, strLegends,'Location','best','FontSize', fontLegend,'Orientation','horizontal');
 %     legend(strLegends,'Location','best','FontSize', fontLegend-2,'Orientation','horizontal','Right');
 %     xlim([0, X_LIM]);
-    xlabel('Time (sec)','fontname', 'Arial','fontsize', fontAxis);
+    xlabel(strTime,'fontname', 'Arial','fontsize', fontAxis);
     ylabel(strPower,'fontname', 'Arial','fontsize', fontAxis);    
     set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);
-    
-    if is_printed
-      figIdx=figIdx +1;
-      fileNames{figIdx} = 'load';
-      epsFile = [ LOCAL_FIG fileNames{figIdx} '.eps'];
-        print ('-depsc', epsFile);
-    end
+
 end
 
 %%
 if PLOTS(3)
-    figure; 
+    figIdx=figIdx +1;
+    figures{figIdx} = figure; 
+    fileNames{figIdx} = 'cost_time';
+    
     figSize = figTwoThirdCol;
         
     for i=1:length(dataFiles)-1
@@ -138,21 +131,18 @@ if PLOTS(3)
     
     legend(strLegends, 'Location','best','FontSize', fontLegend,'Orientation','vertical');
     xlim([0, X_LIM]);
-    xlabel('Time (sec)','fontname', 'Arial','fontsize', fontAxis);
-    ylabel('total cost (USD/sec)','fontname', 'Arial','fontsize', fontAxis);    
+    xlabel(strTime,'fontname', 'Arial','fontsize', fontAxis);
+    ylabel(strTotalCost,'fontname', 'Arial','fontsize', fontAxis);    
     set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);
     
-    if is_printed
-      figIdx=figIdx +1;
-      fileNames{figIdx} = 'cost';
-      epsFile = [ LOCAL_FIG fileNames{figIdx} '.eps'];
-        print ('-depsc', epsFile);
-    end
 end
 
 %%
 if PLOTS(4)
-    figure; 
+    figIdx=figIdx +1;
+    figures{figIdx} = figure; 
+    fileNames{figIdx} = 'cost';
+    
     figSize = figHalfCol;
     
     for i=1:length(dataFiles)
@@ -176,16 +166,10 @@ if PLOTS(4)
     
     legend(hPlot, strLegends,'Location','southeast','FontSize', fontLegend,'Orientation','horizontal');
     xlim([0, X_LIM]);
-    xlabel('Time (sec)','fontname', 'Arial','fontsize', fontAxis);
+    xlabel(strTime,'fontname', 'Arial','fontsize', fontAxis);
     ylabel('global + local costs','fontname', 'Arial','fontsize', fontAxis);    
     set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);
     
-    if is_printed
-      figIdx=figIdx +1;
-      fileNames{figIdx} = 'cost';
-      epsFile = [ LOCAL_FIG fileNames{figIdx} '.eps'];
-        print ('-depsc', epsFile);
-    end
 end
 %% demand flexiblity
 if PLOTS(5)
@@ -201,7 +185,10 @@ if PLOTS(5)
       ,'GenLoss_proposed_0.9_0.01_1'...
       ,'GenLoss_proposed_1_0.01_1'...   
       };
-    figure; 
+    figIdx=figIdx +1;
+    figures{figIdx} = figure; 
+    fileNames{figIdx} = 'load_freq_flex';
+    
     for i=1:length(dataFiles)      
       load([folder dataFiles{i} '.mat']);
       hPlot(i) = plot(t,load_freq(1,:)*60, 'linewidth', lineWidth);  hold on;
@@ -210,18 +197,12 @@ if PLOTS(5)
     
     figSize = figHalfCol;
     
-    xlabel('Time (sec)','fontname', 'Arial','fontsize', fontAxis);
-    ylabel('Frequency (Hz)','fontname', 'Arial','fontsize', fontAxis);
+    xlabel(strTime,'fontname', 'Arial','fontsize', fontAxis);
+    ylabel(strFrequency,'fontname', 'Arial','fontsize', fontAxis);
     strLegends={'10%','20%','30%','40%','50%','60%','70%','80%','90%','100%'};
     legend(hPlot, strLegends,'Location','eastoutside','FontSize', fontLegend,'Orientation','vertical');
     set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);
     
-%     if is_printed
-%       figIdx=figIdx +1;
-%       fileNames{figIdx} = 'load_freq_flex';
-%       epsFile = [ LOCAL_FIG fileNames{figIdx} '.eps'];
-%         print ('-depsc', epsFile);
-%     end
 end
 
 %% weight of frequency deviation (beta)
@@ -237,7 +218,10 @@ if PLOTS(6)
       ,'GenLoss_proposed_0.5_0.01_4'...
       ,'GenLoss_proposed_0.5_0.01_8'...
       };
-    figure; 
+    figIdx=figIdx +1;
+    figures{figIdx} = figure; 
+    fileNames{figIdx} = 'load_freq_flex';
+    
     for i=1:length(dataFiles)      
       load([folder dataFiles{i} '.mat']);
       hPlot(i) = plot(t,load_freq(1,:)*60, 'linewidth', lineWidth);  hold on;
@@ -246,18 +230,12 @@ if PLOTS(6)
     
     figSize = figHalfCol;
     
-    xlabel('Time (sec)','fontname', 'Arial','fontsize', fontAxis);
-    ylabel('Frequency (Hz)','fontname', 'Arial','fontsize', fontAxis);
+    xlabel(strTime,'fontname', 'Arial','fontsize', fontAxis);
+    ylabel(strFrequency,'fontname', 'Arial','fontsize', fontAxis);
 %     strLegends={'10%','20%','30%','40%','50%','60%','70%','80%','90%','100%'};
 %     legend(hPlot, strLegends,'Location','eastoutside','FontSize', fontLegend,'Orientation','vertical');
     set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);
-    
-%     if is_printed
-%       figIdx=figIdx +1;
-%       fileNames{figIdx} = 'load_freq_flex';
-%       epsFile = [ LOCAL_FIG fileNames{figIdx} '.eps'];
-%         print ('-depsc', epsFile);
-%     end
+
 end
 %% weight of frequency deviation (beta)
 if PLOTS(7)
@@ -267,7 +245,10 @@ if PLOTS(7)
             ,'GenLoss_proposed_0.5_0.08_1_1'...
             ,'GenLoss_proposed_0.5_0.16_1_1'...
             }; 
-    figure; 
+    figIdx=figIdx +1;
+    figures{figIdx} = figure; 
+    fileNames{figIdx} = 'load_freq_flex';
+    
     for i=1:length(dataFiles)      
       load([folder dataFiles{i} '.mat']);
       hPlot(i) = plot(t,load_freq(1,:)*60, 'linewidth', lineWidth);  hold on;
@@ -276,18 +257,12 @@ if PLOTS(7)
     
     figSize = figHalfCol;
     
-    xlabel('Time (sec)','fontname', 'Arial','fontsize', fontAxis);
-    ylabel('Frequency (Hz)','fontname', 'Arial','fontsize', fontAxis);
+    xlabel(strTime,'fontname', 'Arial','fontsize', fontAxis);
+    ylabel(strFrequency,'fontname', 'Arial','fontsize', fontAxis);
 %     strLegends={'10%','20%','30%','40%','50%','60%','70%','80%','90%','100%'};
 %     legend(hPlot, strLegends,'Location','eastoutside','FontSize', fontLegend,'Orientation','vertical');
     set (gcf, 'Units', 'Inches', 'Position', figSize, 'PaperUnits', 'inches', 'PaperPosition', figSize);
     
-%     if is_printed
-%       figIdx=figIdx +1;
-%       fileNames{figIdx} = 'load_freq_flex';
-%       epsFile = [ LOCAL_FIG fileNames{figIdx} '.eps'];
-%         print ('-depsc', epsFile);
-%     end
 end
 %%
 warning on;
@@ -295,8 +270,10 @@ return;
 %%
 for i=1:length(fileNames)
     fileName = fileNames{i};
-    epsFile = [ LOCAL_FIG fileName '.eps'];
-    pdfFile = [ fig_path fileName '_new' '.pdf']    
+    epsFile = [ LOCAL_FIG fileName '.eps'];     
+    print (figures{i}, '-depsc', epsFile);
+    
+    pdfFile = [ fig_path fileName '.pdf']    
     cmd = sprintf(PS_CMD_FORMAT, epsFile, pdfFile);
     status = system(cmd);
 end
